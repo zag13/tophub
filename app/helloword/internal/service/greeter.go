@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
+	"tophub/app/helloword/internal/biz"
 
 	v1 "tophub/api/helloworld/v1"
-	"tophub/internal/biz"
 )
 
 // GreeterService is a greeter service.

@@ -1,9 +1,9 @@
 package data
 
 import (
-	"tophub/internal/conf"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"tophub/app/helloword/internal/conf"
 )
 
 // ProviderSet is data providers.

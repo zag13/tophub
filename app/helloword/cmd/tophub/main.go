@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"os"
+	"tophub/app/helloword/internal/conf"
 
-	"tophub/internal/conf"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"

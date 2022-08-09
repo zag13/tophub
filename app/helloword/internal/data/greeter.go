@@ -2,8 +2,8 @@ package data
 
 import (
 	"context"
+	"tophub/app/helloword/internal/biz"
 
-	"tophub/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
 )
 

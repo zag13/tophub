@@ -7,28 +7,28 @@
 package main
 
 import (
-	"tophub/internal/biz"
-	"tophub/internal/conf"
-	"tophub/internal/data"
-	"tophub/internal/server"
-	"tophub/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"tophub/app/helloword/internal/biz"
+	"tophub/app/helloword/internal/conf"
+	data2 "tophub/app/helloword/internal/data"
+	server2 "tophub/app/helloword/internal/server"
+	"tophub/app/helloword/internal/service"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
+	dataData, cleanup, err := data2.NewData(confData, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
+	greeterRepo := data2.NewGreeterRepo(dataData, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
 	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+	grpcServer := server2.NewGRPCServer(confServer, greeterService, logger)
+	httpServer := server2.NewHTTPServer(confServer, greeterService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
