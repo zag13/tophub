@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package api.job.v1;
+
+option go_package = "tophub/api/job/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.job.v1";
+
+service Job {
+	rpc CreateJob (CreateJobRequest) returns (CreateJobReply);
+	rpc UpdateJob (UpdateJobRequest) returns (UpdateJobReply);
+	rpc DeleteJob (DeleteJobRequest) returns (DeleteJobReply);
+	rpc GetJob (GetJobRequest) returns (GetJobReply);
+	rpc ListJob (ListJobRequest) returns (ListJobReply);
+}
+
+message CreateJobRequest {}
+message CreateJobReply {}
+
+message UpdateJobRequest {}
+message UpdateJobReply {}
+
+message DeleteJobRequest {}
+message DeleteJobReply {}
+
+message GetJobRequest {}
+message GetJobReply {}
+
+message ListJobRequest {}
+message ListJobReply {}
