@@ -6,18 +6,18 @@
 package main
 
 import (
+	"tophub/app/task/internal/biz"
+	"tophub/app/task/internal/conf"
+	"tophub/app/task/internal/data"
+	"tophub/app/task/internal/server"
+	"tophub/app/task/internal/service"
+
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	"tophub/app/job/internal/biz"
-	"tophub/app/job/internal/conf"
-	"tophub/app/job/internal/data"
-	"tophub/app/job/internal/server"
-	"tophub/app/job/internal/service"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Registry, *conf.Data, log.Logger, *tracesdk.TracerProvider) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Data, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
 }
