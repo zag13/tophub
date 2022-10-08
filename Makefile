@@ -34,5 +34,5 @@ wire:
 	@if [ "$(APP)" == "UNSPECIFIED" ]; then \
 		find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) wire'; \
 	else \
-  		cd app/$(APP)/cmd/$(APP)/ && pwd && $(MAKE) wire; \
+  		cd app/$(APP) && pwd && $(MAKE) wire; \
   	fi
