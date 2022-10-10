@@ -28,9 +28,6 @@ var (
 
 func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
-	if err := service.InitCron(); err != nil {
-		panic(err)
-	}
 }
 
 func newApp(logger log.Logger, gs *grpc.Server) *kratos.App {
@@ -70,6 +67,18 @@ func main() {
 
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {
+		panic(err)
+	}
+
+	db := service.NewDB(bc.Data)
+	rdb := service.NewRedisDB(bc.Data)
+	serv, err := service.NewService(logger, db, rdb)
+	if err != nil {
+		panic(err)
+	}
+
+	// 初始化定时器
+	if err := service.InitCron(serv); err != nil {
 		panic(err)
 	}
 

@@ -8,34 +8,24 @@ import (
 
 	klog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-redis/redis/v8"
-	"github.com/google/wire"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	pb "tophub/api/task/v1"
 	"tophub/app/task/internal/conf"
 )
 
-// ProviderSet is service providers.
-var ProviderSet = wire.NewSet(NewTaskService, NewDB, NewRedisDB)
-
-type TaskService struct {
-	pb.UnimplementedTaskServer
-
+type Service struct {
 	db  *gorm.DB
 	rdb *redis.Client
 	log *klog.Helper
 }
 
-func NewTaskService(logger klog.Logger, db *gorm.DB, rdb *redis.Client) (*TaskService, func(), error) {
-	cleanup := func() {
-		klog.NewHelper(logger).Info("closing the data resources")
-	}
-	return &TaskService{
+func NewService(logger klog.Logger, db *gorm.DB, rdb *redis.Client) (*Service, error) {
+	return &Service{
 		db:  db,
 		rdb: rdb,
 		log: klog.NewHelper(klog.With(logger, "module", "task/service")),
-	}, cleanup, nil
+	}, nil
 }
 
 func NewDB(c *conf.Data) *gorm.DB {
