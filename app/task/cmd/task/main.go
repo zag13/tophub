@@ -71,8 +71,7 @@ func main() {
 	}
 
 	db := service.NewDB(bc.Data)
-	rdb := service.NewRedisDB(bc.Data)
-	serv, err := service.NewService(logger, db, rdb)
+	serv, err := service.NewService(logger, db)
 	if err != nil {
 		panic(err)
 	}

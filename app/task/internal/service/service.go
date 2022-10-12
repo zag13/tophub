@@ -16,14 +16,12 @@ import (
 
 type Service struct {
 	db  *gorm.DB
-	rdb *redis.Client
 	log *klog.Helper
 }
 
-func NewService(logger klog.Logger, db *gorm.DB, rdb *redis.Client) (*Service, error) {
+func NewService(logger klog.Logger, db *gorm.DB) (*Service, error) {
 	return &Service{
 		db:  db,
-		rdb: rdb,
 		log: klog.NewHelper(klog.With(logger, "module", "task/service")),
 	}, nil
 }
