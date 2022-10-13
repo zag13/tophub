@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 	"io"
 	"net/http"
 	"net/url"
@@ -24,7 +25,7 @@ var (
 )
 
 type Spider struct {
-	Service    *Service
+	DB         *gorm.DB
 	MethodName string
 }
 
@@ -44,7 +45,7 @@ func ExecMethod(s *Spider) {
 
 	data := val[0].Interface().([]datapkg.Data)
 
-	if err := s.Service.db.Create(&data).Error; err != nil {
+	if err := s.DB.Create(&data).Error; err != nil {
 		fmt.Printf("%s ERROR：%s", s.MethodName, err)
 	}
 

@@ -70,14 +70,9 @@ func main() {
 		panic(err)
 	}
 
-	db := service.NewDB(bc.Data)
-	serv, err := service.NewService(logger, db)
-	if err != nil {
-		panic(err)
-	}
-
 	// 初始化定时器
-	if err := service.InitCron(serv); err != nil {
+	db := service.NewDB(bc.Data)
+	if err := service.InitCron(db); err != nil {
 		panic(err)
 	}
 

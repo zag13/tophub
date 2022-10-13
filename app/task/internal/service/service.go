@@ -1,29 +1,35 @@
 package service
 
 import (
-	"context"
 	"log"
 	"os"
 	"time"
 
 	klog "github.com/go-kratos/kratos/v2/log"
-	"github.com/go-redis/redis/v8"
+	"github.com/google/wire"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	pb "tophub/api/task/v1"
 	"tophub/app/task/internal/conf"
 )
 
-type Service struct {
-	db  *gorm.DB
+// ProviderSet is service providers.
+var ProviderSet = wire.NewSet(NewTaskService)
+
+type TaskService struct {
+	pb.UnimplementedTaskServer
+
 	log *klog.Helper
 }
 
-func NewService(logger klog.Logger, db *gorm.DB) (*Service, error) {
-	return &Service{
-		db:  db,
+func NewTaskService(logger klog.Logger) (*TaskService, func(), error) {
+	cleanup := func() {
+		klog.NewHelper(logger).Info("closing the data resources")
+	}
+	return &TaskService{
 		log: klog.NewHelper(klog.With(logger, "module", "task/service")),
-	}, nil
+	}, cleanup, nil
 }
 
 func NewDB(c *conf.Data) *gorm.DB {
@@ -54,20 +60,4 @@ func NewDB(c *conf.Data) *gorm.DB {
 	}
 
 	return db
-}
-
-func NewRedisDB(c *conf.Data) *redis.Client {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:         c.Redis.Addr,
-		Password:     c.Redis.Password,
-		WriteTimeout: c.Redis.WriteTimeout.AsDuration(),
-		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
-	})
-
-	_, err := rdb.Ping(context.TODO()).Result()
-	if err != nil {
-		klog.Errorf("ping redis database error: %v", err)
-	}
-
-	return rdb
 }
