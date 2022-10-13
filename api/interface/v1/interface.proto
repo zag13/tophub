@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api.interface.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "tophub/api/interface/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.interface.v1";
+
+service Interface {
+  rpc Data (DataRequest) returns (DataResponse) {
+    option (google.api.http) = {
+      get: "/application/v1/getApp"
+    };
+  };
+}
+
+message DataRequest {}
+message DataResponse {}
