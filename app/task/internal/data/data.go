@@ -3,11 +3,11 @@ package data
 type Data struct {
 	Id          uint64
 	Host        string
-	Rank        uint8
+	Position    uint8
 	Title       string
 	Description string
-	Image       string
 	Url         string
+	Image       string
 	Extra       string
 	SpiderTime  uint32
 }
