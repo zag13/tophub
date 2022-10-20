@@ -1,16 +1,19 @@
 package data
 
+import "time"
+
 // Data 应该和task共同依赖于一个数据服务
 type Data struct {
-	Id          uint64
+	Id          int64
+	Tab         string
 	Host        string
-	Rank        uint8
+	Position    uint8
 	Title       string
+	Url         string
 	Description string
 	Image       string
-	Url         string
 	Extra       string
-	SpiderTime  uint32
+	SpiderTime  time.Time
 }
 
 func (Data) TableName() string {

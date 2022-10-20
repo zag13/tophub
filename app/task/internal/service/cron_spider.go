@@ -21,8 +21,11 @@ import (
 var (
 	group       sync.WaitGroup
 	methodNames = []string{"WeiBo"}
-	ZhiHuUrl    = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
-	WeiBoUrl    = "https://s.weibo.com/top/summary"
+
+	ZhiHuUrl = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
+	WeiBoUrl = "https://s.weibo.com/top/summary"
+	// WeiBoUrl2 = "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot"
+	GitHubUrl = "https://github.com/trending"
 )
 
 type Spider struct {
@@ -57,7 +60,7 @@ func ExecMethod(s *Spider) {
 	}
 }
 
-func (s *Spider) GetV2EX() []map[string]interface{} {
+func (s *Spider) V2EX() []map[string]interface{} {
 	url := "https://www.v2ex.com/?tab=hot"
 	client := &http.Client{
 		Timeout: 5 * time.Second,
@@ -154,7 +157,6 @@ func (s *Spider) WeiBo() (result []datapkg.Data, err error) {
 
 	u, _ := url.Parse(WeiBoUrl)
 	host := u.Host
-	spiderTime := timez.UnixSecondNow()
 
 	doc.Find("#pl_top_realtimehot table tbody tr").Each(func(i int, selection *goquery.Selection) {
 		pos := cast.ToUint8(selection.Find(".td-01").Text())
@@ -164,6 +166,7 @@ func (s *Spider) WeiBo() (result []datapkg.Data, err error) {
 
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		result = append(result, datapkg.Data{
+			Tab:         "weibo",
 			Host:        host,
 			Position:    pos,
 			Title:       selection.Find(".td-02 a").Text(),
@@ -171,8 +174,19 @@ func (s *Spider) WeiBo() (result []datapkg.Data, err error) {
 			Url:         "https://s.weibo.com" + u,
 			Image:       "",
 			Extra:       "{}",
-			SpiderTime:  spiderTime,
 		})
 	})
+	return
+}
+
+func (s *Spider) GitHub() (result []datapkg.Data, err error) {
+	_, err = http.NewRequest("GET", GitHubUrl, nil)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+func (s *Spider) Bilibili() (result []datapkg.Data, err error) {
 	return
 }

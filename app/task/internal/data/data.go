@@ -1,15 +1,16 @@
 package data
 
 type Data struct {
-	Id          uint64
+	Id          int64
+	Tab         string
 	Host        string
 	Position    uint8
 	Title       string
-	Description string
 	Url         string
+	Description string
 	Image       string
 	Extra       string
-	SpiderTime  uint32
+	SpiderTime  int64
 }
 
 func (Data) TableName() string {
