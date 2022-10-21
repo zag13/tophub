@@ -11,7 +11,8 @@ option java_package = "api.interface.v1";
 service Interface {
   rpc Data (DataRequest) returns (DataResponse) {
     option (google.api.http) = {
-      get: "/interface/v1/data"
+      post: "/interface/v1/data"
+      body: "*"
     };
   };
 }
@@ -24,9 +25,7 @@ message DataResponse {
       uint32 Position = 1;
       string Title = 2;
       string Url = 3;
-      string Description = 4;
-      string Image = 5;
-      string Extra = 6;
+      string Extra = 4;
   }
   repeated Data list = 1;
 }

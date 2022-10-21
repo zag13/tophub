@@ -12,7 +12,7 @@ import (
 func (s *InterfaceService) Data(ctx context.Context, req *v1.DataRequest) (*v1.DataResponse, error) {
 	var dataInDB []data.Data
 
-	if err := s.db.Where("tab = ? AND spider_time >= ? AND spider_time <= ?", req.Tab, time.Now().Add(-10*time.Minute), time.Now().Unix()).Find(&dataInDB).Error; err != nil {
+	if err := s.db.WithContext(ctx).Where("tab = ? AND spider_time >= ? AND spider_time <= ?", req.Tab, time.Now().Add(-360*time.Minute), time.Now()).Find(&dataInDB).Error; err != nil {
 		return nil, err
 	}
 
@@ -20,12 +20,10 @@ func (s *InterfaceService) Data(ctx context.Context, req *v1.DataRequest) (*v1.D
 
 	for _, datum := range dataInDB {
 		list = append(list, &v1.DataResponse_Data{
-			Position:    uint32(datum.Position),
-			Title:       datum.Title,
-			Url:         datum.Url,
-			Description: datum.Description,
-			Image:       datum.Image,
-			Extra:       datum.Extra,
+			Position: uint32(datum.Position),
+			Title:    datum.Title,
+			Url:      datum.Url,
+			Extra:    datum.Extra,
 		})
 	}
 

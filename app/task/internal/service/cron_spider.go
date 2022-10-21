@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"gorm.io/gorm"
 	"io"
@@ -15,12 +16,11 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/spf13/cast"
 	datapkg "tophub/app/task/internal/data"
-	"tophub/pkg/timez"
 )
 
 var (
 	group       sync.WaitGroup
-	methodNames = []string{"WeiBo"}
+	methodNames = []string{"ZhiHu", "WeiBo"}
 
 	ZhiHuUrl = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
 	WeiBoUrl = "https://s.weibo.com/top/summary"
@@ -33,7 +33,7 @@ type Spider struct {
 	MethodName string
 }
 
-func (s *Spider) Run() {
+func (s Spider) Run() {
 	group.Add(len(methodNames))
 	for _, v := range methodNames {
 		s.MethodName = v
@@ -42,7 +42,7 @@ func (s *Spider) Run() {
 	group.Wait()
 }
 
-func ExecMethod(s *Spider) {
+func ExecMethod(s Spider) {
 	defer group.Done()
 	rv := reflect.ValueOf(s)
 	m := rv.MethodByName(s.MethodName)
@@ -60,7 +60,7 @@ func ExecMethod(s *Spider) {
 	}
 }
 
-func (s *Spider) V2EX() []map[string]interface{} {
+func (s Spider) V2EX() []map[string]interface{} {
 	url := "https://www.v2ex.com/?tab=hot"
 	client := &http.Client{
 		Timeout: 5 * time.Second,
@@ -94,7 +94,7 @@ func (s *Spider) V2EX() []map[string]interface{} {
 	return allData
 }
 
-func (s *Spider) ZhiHu() (result []datapkg.Data, err error) {
+func (s Spider) ZhiHu() (result []datapkg.Data, err error) {
 	req, err := http.NewRequest("GET", ZhiHuUrl, nil)
 	if err != nil {
 		return nil, err
@@ -115,27 +115,33 @@ func (s *Spider) ZhiHu() (result []datapkg.Data, err error) {
 
 	u, _ := url.Parse(ZhiHuUrl)
 	host := u.Host
-	spiderTime := timez.UnixSecondNow()
 
 	data := j.Get("data")
 	for i := range data.MustArray() {
 		info := data.GetIndex(i)
 		us := strings.Split(info.Get("target").Get("url").MustString(), "/")
+
+		extra, err := json.Marshal(map[string]string{
+			"description": info.Get("target").Get("excerpt").MustString(),
+			"image":       info.Get("children").GetIndex(0).Get("thumbnail").MustString(),
+		})
+		if err != nil {
+			return nil, err
+		}
+
 		result = append(result, datapkg.Data{
-			Host:        host,
-			Position:    cast.ToUint8(i + 1),
-			Title:       info.Get("target").Get("title").MustString(),
-			Description: info.Get("target").Get("excerpt").MustString(),
-			Url:         "https://www.zhihu.com/question/" + us[len(us)-1],
-			Image:       info.Get("children").GetIndex(0).Get("thumbnail").MustString(),
-			Extra:       "{}",
-			SpiderTime:  spiderTime,
+			Tab:      "zhihu",
+			Host:     host,
+			Position: cast.ToUint8(i + 1),
+			Title:    info.Get("target").Get("title").MustString(),
+			Url:      "https://www.zhihu.com/question/" + us[len(us)-1],
+			Extra:    cast.ToString(extra),
 		})
 	}
 	return
 }
 
-func (s *Spider) WeiBo() (result []datapkg.Data, err error) {
+func (s Spider) WeiBo() (result []datapkg.Data, err error) {
 	req, err := http.NewRequest("GET", WeiBoUrl, nil)
 	if err != nil {
 		return nil, err
@@ -164,22 +170,25 @@ func (s *Spider) WeiBo() (result []datapkg.Data, err error) {
 			return
 		}
 
+		extra, err := json.Marshal(map[string]string{})
+		if err != nil {
+			return
+		}
+
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		result = append(result, datapkg.Data{
-			Tab:         "weibo",
-			Host:        host,
-			Position:    pos,
-			Title:       selection.Find(".td-02 a").Text(),
-			Description: "",
-			Url:         "https://s.weibo.com" + u,
-			Image:       "",
-			Extra:       "{}",
+			Tab:      "weibo",
+			Host:     host,
+			Position: pos,
+			Title:    selection.Find(".td-02 a").Text(),
+			Url:      "https://s.weibo.com" + u,
+			Extra:    cast.ToString(extra),
 		})
 	})
 	return
 }
 
-func (s *Spider) GitHub() (result []datapkg.Data, err error) {
+func (s Spider) GitHub() (result []datapkg.Data, err error) {
 	_, err = http.NewRequest("GET", GitHubUrl, nil)
 	if err != nil {
 		return nil, err
@@ -187,6 +196,6 @@ func (s *Spider) GitHub() (result []datapkg.Data, err error) {
 	return
 }
 
-func (s *Spider) Bilibili() (result []datapkg.Data, err error) {
+func (s Spider) Bilibili() (result []datapkg.Data, err error) {
 	return
 }

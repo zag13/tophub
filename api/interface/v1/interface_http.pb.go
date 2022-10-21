@@ -27,13 +27,13 @@ type InterfaceHTTPServer interface {
 
 func RegisterInterfaceHTTPServer(s *http.Server, srv InterfaceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/interface/v1/data", _Interface_Data0_HTTP_Handler(srv))
+	r.POST("/interface/v1/data", _Interface_Data0_HTTP_Handler(srv))
 }
 
 func _Interface_Data0_HTTP_Handler(srv InterfaceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DataRequest
-		if err := ctx.BindQuery(&in); err != nil {
+		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationInterfaceData)
@@ -64,10 +64,10 @@ func NewInterfaceHTTPClient(client *http.Client) InterfaceHTTPClient {
 func (c *InterfaceHTTPClientImpl) Data(ctx context.Context, in *DataRequest, opts ...http.CallOption) (*DataResponse, error) {
 	var out DataResponse
 	pattern := "/interface/v1/data"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationInterfaceData))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
