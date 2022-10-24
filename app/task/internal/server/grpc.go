@@ -1,6 +1,9 @@
 package server
 
 import (
+	"github.com/go-kratos/kratos/v2/middleware/logging"
+	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	v1 "tophub/api/task/v1"
 	"tophub/app/task/internal/conf"
 	"tophub/app/task/internal/service"
@@ -11,10 +14,13 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, task *service.TaskService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, task *service.TaskService, tp *tracesdk.TracerProvider, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			tracing.Server(
+				tracing.WithTracerProvider(tp)),
+			logging.Server(logger),
 		),
 	}
 	if c.Grpc.Network != "" {

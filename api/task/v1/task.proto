@@ -7,4 +7,18 @@ option java_multiple_files = true;
 option java_package = "api.task.v1";
 
 service Task {
+  rpc Data (DataRequest) returns (DataResponse);
+}
+
+message DataRequest {
+  string tab = 1;
+}
+message DataResponse {
+  message Data {
+    uint32 Position = 1;
+    string Title = 2;
+    string Url = 3;
+    string Extra = 4;
+  }
+  repeated Data list = 1;
 }
