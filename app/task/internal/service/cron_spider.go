@@ -113,9 +113,6 @@ func (s Spider) ZhiHu() (result []datapkg.Data, err error) {
 		return nil, err
 	}
 
-	u, _ := url.Parse(ZhiHuUrl)
-	host := u.Host
-
 	data := j.Get("data")
 	for i := range data.MustArray() {
 		info := data.GetIndex(i)
@@ -131,7 +128,6 @@ func (s Spider) ZhiHu() (result []datapkg.Data, err error) {
 
 		result = append(result, datapkg.Data{
 			Tab:      "zhihu",
-			Host:     host,
 			Position: cast.ToUint8(i + 1),
 			Title:    info.Get("target").Get("title").MustString(),
 			Url:      "https://www.zhihu.com/question/" + us[len(us)-1],
@@ -161,9 +157,6 @@ func (s Spider) WeiBo() (result []datapkg.Data, err error) {
 		return nil, err
 	}
 
-	u, _ := url.Parse(WeiBoUrl)
-	host := u.Host
-
 	doc.Find("#pl_top_realtimehot table tbody tr").Each(func(i int, selection *goquery.Selection) {
 		pos := cast.ToUint8(selection.Find(".td-01").Text())
 		if pos == 0 {
@@ -178,7 +171,6 @@ func (s Spider) WeiBo() (result []datapkg.Data, err error) {
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		result = append(result, datapkg.Data{
 			Tab:      "weibo",
-			Host:     host,
 			Position: pos,
 			Title:    selection.Find(".td-02 a").Text(),
 			Url:      "https://s.weibo.com" + u,

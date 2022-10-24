@@ -2,7 +2,6 @@ CREATE TABLE `data`
 (
     `id`          bigint        NOT NULL AUTO_INCREMENT,
     `tab`         varchar(32)   NOT NULL COMMENT '标识',
-    `host`        varchar(64)   NOT NULL DEFAULT '' COMMENT '网站host',
     `position`    tinyint unsigned NOT NULL COMMENT '资讯位置',
     `title`       varchar(512)  NOT NULL DEFAULT '' COMMENT '资讯标题',
     `url`         varchar(512)  NOT NULL COMMENT '资讯地址',
