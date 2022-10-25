@@ -2,28 +2,25 @@ package service
 
 import (
 	"context"
-	"time"
 
 	v1 "tophub/api/interface/v1"
-	"tophub/app/interface/internal/data"
+	taskv1 "tophub/api/task/v1"
 )
 
 // Data implements data.GreeterServer.
 func (s *InterfaceService) Data(ctx context.Context, req *v1.DataRequest) (*v1.DataResponse, error) {
-	var dataInDB []data.Data
-
-	if err := s.db.WithContext(ctx).Where("tab = ? AND spider_time >= ? AND spider_time <= ?", req.Tab, time.Now().Add(-360*time.Minute), time.Now()).Find(&dataInDB).Error; err != nil {
+	resp, err := s.tc.Data(ctx, &taskv1.DataRequest{Tab: req.Tab})
+	if err != nil {
 		return nil, err
 	}
 
 	var list []*v1.DataResponse_Data
-
-	for _, datum := range dataInDB {
+	for _, data := range resp.List {
 		list = append(list, &v1.DataResponse_Data{
-			Position: uint32(datum.Position),
-			Title:    datum.Title,
-			Url:      datum.Url,
-			Extra:    datum.Extra,
+			Position: data.Position,
+			Title:    data.Title,
+			Url:      data.Url,
+			Extra:    data.Extra,
 		})
 	}
 
