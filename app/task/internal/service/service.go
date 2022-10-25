@@ -1,15 +1,18 @@
 package service
 
 import (
-	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
-	"github.com/go-kratos/kratos/v2/registry"
-	consulAPI "github.com/hashicorp/consul/api"
+	"context"
 	"log"
 	"os"
 	"time"
 
+	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	klog "github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
+	consulAPI "github.com/hashicorp/consul/api"
+	"github.com/robfig/cron/v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -18,20 +21,26 @@ import (
 )
 
 // ProviderSet is service providers.
-var ProviderSet = wire.NewSet(NewTaskService, NewDiscovery, NewRegistrar)
+var ProviderSet = wire.NewSet(NewTaskService, NewDiscovery, NewRegistrar, NewDB, NewRedisDB, NewCron)
 
 type TaskService struct {
 	pb.UnimplementedTaskServer
 
-	log *klog.Helper
+	db   *gorm.DB
+	rdb  *redis.Client
+	cron *cron.Cron
+	log  *klog.Helper
 }
 
-func NewTaskService(logger klog.Logger) (*TaskService, func(), error) {
+func NewTaskService(db *gorm.DB, rdb *redis.Client, cron *cron.Cron, logger klog.Logger) (*TaskService, func(), error) {
 	cleanup := func() {
 		klog.NewHelper(logger).Info("closing the data resources")
 	}
 	return &TaskService{
-		log: klog.NewHelper(klog.With(logger, "module", "task/service")),
+		db:   db,
+		rdb:  rdb,
+		cron: cron,
+		log:  klog.NewHelper(klog.With(logger, "module", "task/service")),
 	}, cleanup, nil
 }
 
@@ -87,4 +96,32 @@ func NewDB(c *conf.Data) *gorm.DB {
 	}
 
 	return db
+}
+
+func NewRedisDB(c *conf.Data) *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:         c.Redis.Addr,
+		Password:     c.Redis.Password,
+		WriteTimeout: c.Redis.WriteTimeout.AsDuration(),
+		ReadTimeout:  c.Redis.ReadTimeout.AsDuration(),
+	})
+
+	_, err := rdb.Ping(context.TODO()).Result()
+	if err != nil {
+		klog.Errorf("ping redis database error: %v", err)
+	}
+
+	return rdb
+}
+
+func NewCron(db *gorm.DB) *cron.Cron {
+	c := cron.New(cron.WithSeconds())
+	c.Start()
+
+	if _, err := c.AddJob("* */10 * * * *", &Spider{DB: db}); err != nil {
+		klog.Errorf("failed opening connection to sqlite: %v", err)
+		panic("failed to add Spider Job")
+	}
+
+	return c
 }

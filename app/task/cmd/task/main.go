@@ -16,7 +16,6 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"tophub/app/task/internal/conf"
-	"tophub/app/task/internal/service"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -97,12 +96,6 @@ func main() {
 		panic(err)
 	}
 	defer cleanup()
-
-	// 初始化定时器
-	db := service.NewDB(bc.Data)
-	if err := service.InitCron(db); err != nil {
-		panic(err)
-	}
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {

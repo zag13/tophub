@@ -18,7 +18,10 @@ import (
 
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, data *conf.Data, registry *conf.Registry, tracerProvider *trace.TracerProvider, logger log.Logger) (*kratos.App, func(), error) {
-	taskService, cleanup, err := service.NewTaskService(logger)
+	db := service.NewDB(data)
+	client := service.NewRedisDB(data)
+	cron := service.NewCron(db)
+	taskService, cleanup, err := service.NewTaskService(db, client, cron, logger)
 	if err != nil {
 		return nil, nil, err
 	}
