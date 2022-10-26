@@ -43,8 +43,10 @@
 
 <script lang="ts">
 import {UseDark} from "@vueuse/components";
-import {Moon, Sunny} from '@element-plus/icons-vue'
+// import {Moon} from '@element-plus/icons-vue'
 import ZhiHu from "@/components/sites/ZhiHu.vue";
+import Sunny from "@/components/icons/IconSunny.vue"
+import Moon from "@/components/icons/IconMoon.vue"
 
 export default {
   components: {
