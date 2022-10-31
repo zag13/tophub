@@ -2,16 +2,16 @@ package service
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
+	clientv3 "go.etcd.io/etcd/client/v3"
 	"log"
 	"os"
 	"time"
 
-	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	klog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
-	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/robfig/cron/v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -45,26 +45,24 @@ func NewTaskService(db *gorm.DB, rdb *redis.Client, cron *cron.Cron, logger klog
 }
 
 func NewDiscovery(conf *conf.Registry) registry.Discovery {
-	c := consulAPI.DefaultConfig()
-	c.Address = conf.Consul.Address
-	c.Scheme = conf.Consul.Scheme
-	cli, err := consulAPI.NewClient(c)
+	c := clientv3.Config{}
+	c.Endpoints = conf.Etcd.Endpoints
+	cli, err := clientv3.New(c)
 	if err != nil {
 		panic(err)
 	}
-	r := consul.New(cli, consul.WithHealthCheck(false))
+	r := etcd.New(cli)
 	return r
 }
 
 func NewRegistrar(conf *conf.Registry) registry.Registrar {
-	c := consulAPI.DefaultConfig()
-	c.Address = conf.Consul.Address
-	c.Scheme = conf.Consul.Scheme
-	cli, err := consulAPI.NewClient(c)
+	c := clientv3.Config{}
+	c.Endpoints = conf.Etcd.Endpoints
+	cli, err := clientv3.New(c)
 	if err != nil {
 		panic(err)
 	}
-	r := consul.New(cli, consul.WithHealthCheck(false))
+	r := etcd.New(cli)
 	return r
 }
 
