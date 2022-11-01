@@ -1,15 +1,16 @@
 import request from '@/utils/request'
 
 const dataApi = {
-    GetData: "",
+    ListData: "/data/listData",
 }
 
-export function getData(param: any) {
+export function listData(params: any) {
+    console.log(params)
     return request({
-        url: dataApi.GetData,
-        method: 'get',
-        params: {
-            "tab": param.tab,
+        url: dataApi.ListData,
+        method: 'post',
+        data: {
+            "tab": params.tab
         }
     })
 }

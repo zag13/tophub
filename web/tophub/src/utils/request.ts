@@ -1,5 +1,4 @@
 import axios from "axios";
-import {ElMessage} from "element-plus";
 
 const request = axios.create({
     baseURL: '',
@@ -14,10 +13,8 @@ request.interceptors.request.use((config) => {
     return config
 }, errorHandler)
 
-request.interceptors.response.use((res) => {
-    const {data: result, meta: {msg, status}} = res.data
-    ElMessage({message: msg, type: "success"})
-    return result
+request.interceptors.response.use((response) => {
+    return response.data
 }, errorHandler)
 
 export default request
