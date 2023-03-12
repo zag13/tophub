@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package api.topdata.service.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "tophub/api/topdata/service/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.topdata.service.v1";
+
+service Topdata {
+	rpc List (ListRequest) returns (ListReply) {
+		option (google.api.http) = {
+			post: "/v1/list"
+			body: "*"
+		};
+	};
+}
+
+message ListRequest {
+	string tab = 1;
+	int64 page_num = 2;
+	int64 page_size = 3;
+}
+message ListReply {
+	message List {
+		uint32 position = 1;
+		string title = 2;
+		string url = 3;
+		map<string, string> extra = 4;
+	}
+	repeated List list = 1;
+}

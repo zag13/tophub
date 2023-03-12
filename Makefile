@@ -14,25 +14,25 @@ init:
 # generate api proto
 api:
 	@if [ "$(APP)" == "UNSPECIFIED" ]; then \
-		find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) api'; \
+		find app -type d -depth 2 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) api'; \
 	else \
-  		cd app/$(APP) && pwd && $(MAKE) api; \
+  		cd app/$(APP)/service && pwd && $(MAKE) api; \
   	fi
 
 .PHONY: config
 # generate internal proto
 config:
 	@if [ "$(APP)" == "UNSPECIFIED" ]; then \
-		find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) config'; \
+		find app -type d -depth 2 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) config'; \
 	else \
-  		cd app/$(APP) && pwd && $(MAKE) config; \
+  		cd app/$(APP)/service && pwd && $(MAKE) config; \
   	fi
 
 .PHONY: wire
 # generate wire
 wire:
 	@if [ "$(APP)" == "UNSPECIFIED" ]; then \
-		find app -type d -depth 1 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) wire'; \
+		find app -type d -depth 2 -print | xargs -L 1 bash -c 'cd "$$0" && pwd && $(MAKE) wire'; \
 	else \
-  		cd app/$(APP) && pwd && $(MAKE) wire; \
+  		cd app/$(APP)/service && pwd && $(MAKE) wire; \
   	fi
