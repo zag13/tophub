@@ -22,6 +22,15 @@
     <el-main style="background-color: var(--el-bg-color-page)">
       <el-row class="justify-center">
         <el-col :span="16" class="" style="">
+          <el-tabs v-model="activeName" @tab-click="handleClick" class="tabs" >
+            <el-tab-pane v-for="(site, index) in sites" :index="index" :label="site.tab" :name="site.name">
+              <template #label>
+                <img :src="site.icon" alt="" class="w-1 h-1">
+                {{ site.name }}
+              </template>
+              <component :is="site.content"></component>
+            </el-tab-pane>
+          </el-tabs>
           <el-menu
             mode="horizontal"
             default-active="zhihu"
@@ -33,7 +42,6 @@
               {{ site.name }}
             </el-menu-item>
           </el-menu>
-          <zhi-hu/>
         </el-col>
       </el-row>
     </el-main>
@@ -43,22 +51,23 @@
 
 <script lang="ts">
 import {UseDark} from "@vueuse/components";
-// import {Moon} from '@element-plus/icons-vue'
+import {markRaw} from "vue";
 import ZhiHu from "@/components/sites/ZhiHu.vue";
+import WeiBo from "@/components/sites/WeiBo.vue";
 import Sunny from "@/components/icons/IconSunny.vue"
 import Moon from "@/components/icons/IconMoon.vue"
 
 export default {
   components: {
     UseDark,
-    ZhiHu
+    ZhiHu, WeiBo
   },
   data() {
     return {
       sites: sites,
       isBlack: true,
-      Sunny: Sunny,
-      Moon: Moon,
+      Sunny: markRaw(Sunny),
+      Moon: markRaw(Moon),
     }
   },
   methods: {
@@ -69,7 +78,17 @@ export default {
 }
 
 const sites = [
-  {tab: "zhihu", name: "知乎", icon: "https://static.zhihu.com/heifetz/favicon.ico"},
-  {tab: "weibo", name: "微博", icon: "https://weibo.com/favicon.ico"},
+  {tab: "zhihu", name: "知乎", content: ZhiHu, icon: "https://static.zhihu.com/heifetz/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
+  {tab: "weibo", name: "微博", content: WeiBo, icon: "https://weibo.com/favicon.ico"},
 ]
 </script>
