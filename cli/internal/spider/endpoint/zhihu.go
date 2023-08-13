@@ -11,8 +11,8 @@ import (
 
 const (
 	ZHIHU_ENDPOINT   = "zhihu"
-	ZHIHU_URL        = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
 	ZHIHU_URL_PREFIX = "https://www.zhihu.com/question/"
+	ZHIHU_URL        = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
 )
 
 func ZhiHu(opts ...Options) (tops []Top, err error) {
