@@ -7,48 +7,24 @@ import (
 	"context"
 	"errors"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
-	"github.com/joho/godotenv"
-	"github.com/spf13/viper"
-	"github.com/zag13/tophub/server/config"
+	"github.com/zag13/tophub/server/api/route"
+	"github.com/zag13/tophub/server/bootstrap"
 )
-
-var (
-	envFile = flag.String("e", "../.env", "the env file")
-	cfgFile = flag.String("c", "./etc/tophub-server.yaml", "the config file")
-)
-
-func init() {
-	flag.Parse()
-
-	if err := godotenv.Load(*envFile); err != nil {
-		fmt.Println(fmt.Sprintf("Loading env file error: %v", err))
-		fmt.Println("Using default config file: ./etc/tophub-cli.yaml")
-	}
-
-	viper.SetConfigFile(*cfgFile)
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file: %v", err)
-	}
-
-	viper.AutomaticEnv()
-	viper.SetEnvPrefix("SERVER")
-
-	if err := viper.Unmarshal(&config.C); err != nil {
-		log.Fatalf("Unable to unmarshal config: %v", err)
-	}
-}
 
 func main() {
+	flag.Parse()
+
+	app := bootstrap.App()
+
 	srv := &http.Server{
-		Addr:    config.C.Port,
-		Handler: setupRouter(),
+		Addr:    app.Config.Port,
+		Handler: route.Setup(app),
 	}
 
 	go func() {

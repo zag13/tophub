@@ -5,10 +5,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
-	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zag13/tophub/cli/internal/config"
@@ -17,7 +15,6 @@ import (
 
 var (
 	envFile = flag.String("e", "../.env", "the env file")
-	cfgFile = flag.String("c", "./etc/tophub-cli.yaml", "the config file")
 
 	rootCmd = &cobra.Command{
 		Use:   "topcli",
@@ -27,6 +24,8 @@ var (
 )
 
 func main() {
+	flag.Parse()
+
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.AddCommand(spider.CmdSpider)
@@ -37,22 +36,15 @@ func main() {
 }
 
 func initConfig() {
-	flag.Parse()
+	viper.SetConfigFile(*envFile)
 
-	if err := godotenv.Load(*envFile); err != nil {
-		fmt.Println(fmt.Sprintf("Loading env file error: %v", err))
-		fmt.Println("Using default config file: ./etc/tophub-cli.yaml")
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Fatal("Can't find the env file: ", err)
 	}
 
-	viper.SetConfigFile(*cfgFile)
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file: %v", err)
-	}
-
-	viper.AutomaticEnv()
-	viper.SetEnvPrefix("CLI")
-
-	if err := viper.Unmarshal(&config.C); err != nil {
-		log.Fatalf("Unable to unmarshal config: %v", err)
+	err = viper.Unmarshal(&config.C)
+	if err != nil {
+		log.Fatal("Environment can't be loaded: ", err)
 	}
 }

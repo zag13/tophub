@@ -36,3 +36,4 @@ server-build:
 # running server
 server-run:
 	@echo "running server"
+	cd server && pwd && go run main.go
