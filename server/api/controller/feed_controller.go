@@ -10,5 +10,5 @@ type FeedController struct {
 }
 
 func (c *FeedController) Feed(ctx *gin.Context) {
-
+	// TODO
 }

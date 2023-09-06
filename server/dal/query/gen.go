@@ -16,34 +16,34 @@ import (
 )
 
 var (
-	Q          = new(Query)
-	TophubFeed *tophubFeed
+	Q    = new(Query)
+	Feed *feed
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	TophubFeed = &Q.TophubFeed
+	Feed = &Q.Feed
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:         db,
-		TophubFeed: newTophubFeed(db, opts...),
+		db:   db,
+		Feed: newFeed(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	TophubFeed tophubFeed
+	Feed feed
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:         db,
-		TophubFeed: q.TophubFeed.clone(db),
+		db:   db,
+		Feed: q.Feed.clone(db),
 	}
 }
 
@@ -57,18 +57,18 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:         db,
-		TophubFeed: q.TophubFeed.replaceDB(db),
+		db:   db,
+		Feed: q.Feed.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	TophubFeed ITophubFeedDo
+	Feed *feedDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		TophubFeed: q.TophubFeed.WithContext(ctx),
+		Feed: q.Feed.WithContext(ctx),
 	}
 }
 

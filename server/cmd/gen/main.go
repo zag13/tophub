@@ -14,7 +14,7 @@ func init() {
 func main() {
 	g := gen.NewGenerator(gen.Config{
 		OutPath:       "./dal/query",
-		Mode:          gen.WithDefaultQuery | gen.WithoutContext | gen.WithQueryInterface,
+		Mode:          gen.WithDefaultQuery,
 		FieldNullable: true,
 	})
 

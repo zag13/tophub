@@ -4,14 +4,14 @@
 
 package model
 
-const TableNameTophubFeed = "tophub_feed"
+const TableNameFeed = "feed"
 
-// TophubFeed mapped from table <tophub_feed>
-type TophubFeed struct {
+// Feed mapped from table <feed>
+type Feed struct {
 	ID int64 `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 }
 
-// TableName TophubFeed's table name
-func (*TophubFeed) TableName() string {
-	return TableNameTophubFeed
+// TableName Feed's table name
+func (*Feed) TableName() string {
+	return TableNameFeed
 }

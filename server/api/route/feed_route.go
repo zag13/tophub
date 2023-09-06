@@ -10,5 +10,5 @@ func NewFeedRouter(q *query.Query, group *gin.RouterGroup) {
 	c := controller.FeedController{
 		Q: q,
 	}
-	group.GET("/data", c.Feed)
+	group.GET("/feed", c.Feed)
 }
