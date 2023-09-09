@@ -21,31 +21,21 @@ func (fc *FeedController) Feed(c *gin.Context) {
 		return
 	}
 
-	vals, err := fc.NewsModel.FindPage(c, map[string]any{}, req.Page, req.PageSize)
+	vals, err := fc.NewsModel.FindLatest(c, map[string]any{"Site": req.Site})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, domain.Error(domain.ErrorCodeInternalError, err.Error()))
 		return
 	}
 
-	feeds := []domain.Feed{}
-	for i, val := range vals {
+	var feeds []domain.Feed
+	for _, val := range vals {
 		feeds = append(feeds, domain.Feed{
 			Site:    val.Site,
 			Ranking: val.Ranking,
 			Title:   val.Title,
 			URL:     val.URL,
 		})
-		if i >= req.PageSize-1 {
-			break
-		}
 	}
 
-	domain.ToSuccessResponse(c, domain.FeedData{
-		List: feeds,
-		PageInfo: domain.PageInfo{
-			Page:      req.Page,
-			PageSize:  req.PageSize,
-			TotalPage: domain.GetTotalPage(req.Page, req.PageSize, len(vals)),
-		},
-	})
+	domain.ToSuccessResponse(c, domain.FeedData{List: feeds})
 }

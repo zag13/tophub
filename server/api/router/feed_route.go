@@ -10,5 +10,5 @@ func NewFeedRoute(q *dal.Query, group *gin.RouterGroup) {
 	c := controller.FeedController{
 		NewsModel: dal.NewNewsModel(q),
 	}
-	group.GET("/feed", c.Feed)
+	group.POST("/feed", c.Feed)
 }

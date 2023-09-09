@@ -6,8 +6,7 @@ type FeedRequest struct {
 }
 
 type FeedData struct {
-	List     []Feed   `json:"list"`
-	PageInfo PageInfo `json:"pageInfo"`
+	List []Feed `json:"list"`
 }
 
 type Feed struct {
