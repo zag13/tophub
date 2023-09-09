@@ -2,13 +2,11 @@ E = UNKNOWN
 S = UNKNOWN
 
 .PHONY: cli-build
-# building cli
 cli-build:
 	@echo "building cli"
 	cd cli && pwd && go build -o ../bin/ ./...;
 
 .PHONY: cli-run
-# running cli
 cli-run:
 	@echo "running cli"
 	@if [ "$(E)" == "UNKNOWN" && "$(S)" == "UNKNOWN" ]; then \
@@ -18,22 +16,29 @@ cli-run:
 	fi
 
 .PHONY: client-build
-# building client
 client-build:
 	@echo "building client"
 
 .PHONY: client-run
-# running client
 client-run:
 	@echo "running client"
 
+.PHONY: server-gen
+server-gen:
+	@echo "gen server dal..."
+	cd server && go run cmd/gen/*.go
+
 .PHONY: server-build
-# building server
 server-build:
 	@echo "building server"
 
 .PHONY: server-run
-# running server
 server-run:
 	@echo "running server"
-	cd server && pwd && go run main.go
+	cd server && go run *.go
+
+.PHONY: tidy
+tidy:
+	@echo "tidy"
+	cd cli && go mod tidy; \
+	cd ../server && go mod tidy;

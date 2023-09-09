@@ -13,7 +13,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/zag13/tophub/server/api/route"
+	"github.com/zag13/tophub/server/api/router"
 	"github.com/zag13/tophub/server/bootstrap"
 )
 
@@ -24,7 +24,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    app.Config.Port,
-		Handler: route.Setup(app),
+		Handler: router.Setup(app),
 	}
 
 	go func() {

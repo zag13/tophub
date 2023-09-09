@@ -1,4 +1,4 @@
-package route
+package router
 
 import (
 	"github.com/gin-gonic/gin"
@@ -9,8 +9,8 @@ func Setup(app bootstrap.Application) *gin.Engine {
 	r := gin.Default()
 
 	publicRouter := r.Group("")
-	NewPingRouter(publicRouter)
-	NewFeedRouter(app.Q, publicRouter)
+	NewPingRoute(publicRouter)
+	NewFeedRoute(app.Q, publicRouter)
 
 	return r
 }

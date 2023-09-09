@@ -1,14 +1,14 @@
-package route
+package router
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/zag13/tophub/server/api/controller"
-	"github.com/zag13/tophub/server/dal/query"
+	"github.com/zag13/tophub/server/dal"
 )
 
-func NewFeedRouter(q *query.Query, group *gin.RouterGroup) {
+func NewFeedRoute(q *dal.Query, group *gin.RouterGroup) {
 	c := controller.FeedController{
-		Q: q,
+		NewsModel: dal.NewNewsModel(q),
 	}
 	group.GET("/feed", c.Feed)
 }

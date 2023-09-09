@@ -15,7 +15,7 @@ type Config struct {
 	MySQLDSN string `mapstructure:"SERVER_MYSQL_DSN"`
 }
 
-func NewConfig() Config {
+func NewConfig() *Config {
 	c := Config{}
 
 	viper.SetConfigFile(*envFile)
@@ -34,5 +34,5 @@ func NewConfig() Config {
 		log.Println("The App is running in development env")
 	}
 
-	return c
+	return &c
 }

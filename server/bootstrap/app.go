@@ -1,15 +1,19 @@
 package bootstrap
 
-import "github.com/zag13/tophub/server/dal/query"
+import "github.com/zag13/tophub/server/dal"
 
 type Application struct {
-	Config Config
-	Q      *query.Query
+	Config *Config
+	Q      *dal.Query
 }
 
 func App() Application {
-	app := &Application{}
+	app := Application{}
+
 	app.Config = NewConfig()
 	app.Q = NewDatabase(app.Config)
-	return *app
+
+	initEnv()
+
+	return app
 }
