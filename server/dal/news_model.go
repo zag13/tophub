@@ -25,9 +25,7 @@ func NewNewsModel(q *Query) NewsModel {
 }
 
 func (m *customNewsModel) FindOne(ctx context.Context, id int64) (*model.News, error) {
-	news := m.Q.News
-
-	return m.Q.News.WithContext(ctx).Where(news.ID.Eq(id)).Take()
+	return m.Q.News.WithContext(ctx).FindOne(id)
 }
 
 func (m *customNewsModel) FindPage(ctx context.Context, qry map[string]any, page, pageSize int) ([]*model.News, error) {

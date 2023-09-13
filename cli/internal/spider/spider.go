@@ -1,12 +1,13 @@
 package spider
 
 import (
+	"context"
 	"errors"
-	"fmt"
+
 	"github.com/spf13/cobra"
-	"github.com/zag13/tophub/cli/internal/config"
-	"github.com/zag13/tophub/cli/internal/spider/endpoint"
+	"github.com/zag13/tophub/cli/internal/spider/site"
 	"github.com/zag13/tophub/cli/internal/spider/storage"
+	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -17,41 +18,68 @@ var (
 		RunE:  run,
 	}
 
-	epUrl string
+	sites []string
 
-	epHandlers = map[string]func(...endpoint.Options) (tops []endpoint.Top, err error){
-		"zhihu": endpoint.ZhiHu,
+	siteHandlers = map[string]func(...site.Options) (tops []site.Top, err error){
+		"zhihu": site.ZhiHu,
 	}
 
-	stgHandlers = map[string]func(tops []endpoint.Top) error{
+	stgHandlers = map[string]func(tops []site.Top) error{
+		"db":   storage.DB,
 		"file": storage.File,
 	}
 )
 
 func init() {
-	CmdSpider.Flags().StringVarP(&epUrl, "url", "u", "", "the url of endpoint")
+	CmdSpider.Flags().StringSliceVarP(&sites, "sites", "s", []string{}, "site url")
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		return errors.New("please enter the endpoint name")
-	}
+	g, _ := errgroup.WithContext(context.Background())
 
-	fmt.Println(config.C)
-	epHandler, ok := epHandlers[args[0]]
-	if !ok {
-		return errors.New("endpoint not found")
+	if len(sites) == 0 {
+		for key := range siteHandlers {
+			sites = append(sites, key)
+		}
 	}
-	tops, err := epHandler(endpoint.WithUrl(epUrl))
-	if err != nil {
+	results := map[string][]site.Top{}
+	errs := map[string]error{}
+
+	for _, s := range sites {
+		s := s
+		g.Go(func() error {
+			handler, ok := siteHandlers[s]
+			if !ok {
+				errs[s] = errors.New("site not found")
+				return nil
+			}
+
+			tops, err := handler()
+			if err != nil {
+				errs[s] = err
+			} else {
+				results[s] = tops
+			}
+			return nil
+		})
+	}
+	if err := g.Wait(); err != nil {
 		return err
 	}
 
-	stgHandler := storage.File
+	stgHandler := storage.DB
 	if len(args) > 1 {
 		if val, ok := stgHandlers[args[1]]; ok {
 			stgHandler = val
 		}
 	}
+
+	tops := []site.Top{}
+	for _, result := range results {
+		for _, top := range result {
+			tops = append(tops, top)
+		}
+	}
+
 	return stgHandler(tops)
 }

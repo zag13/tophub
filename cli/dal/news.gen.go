@@ -6,7 +6,6 @@ package dal
 
 import (
 	"context"
-	"strings"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -17,7 +16,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/zag13/tophub/server/dal/model"
+	"github.com/zag13/tophub/cli/dal/model"
 )
 
 func newNews(db *gorm.DB, opts ...gen.DOOption) news {
@@ -116,21 +115,6 @@ func (n news) replaceDB(db *gorm.DB) news {
 }
 
 type newsDo struct{ gen.DO }
-
-// SELECT * FROM @@table WHERE id = @id
-func (n newsDo) FindOne(id int64) (result *model.News, err error) {
-	var params []interface{}
-
-	var generateSQL strings.Builder
-	params = append(params, id)
-	generateSQL.WriteString("SELECT * FROM news WHERE id = ? ")
-
-	var executeSQL *gorm.DB
-	executeSQL = n.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert
-	err = executeSQL.Error
-
-	return
-}
 
 func (n newsDo) Debug() *newsDo {
 	return n.withDO(n.DO.Debug())

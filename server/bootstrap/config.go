@@ -12,7 +12,7 @@ var envFile = flag.String("e", "../.env", "the env file")
 type Config struct {
 	AppEnv   string `mapstructure:"SERVER_APP_ENV"`
 	Port     string `mapstructure:"SERVER_PORT"`
-	MySQLDSN string `mapstructure:"SERVER_MYSQL_DSN"`
+	MySQLDSN string `mapstructure:"MYSQL_DSN"`
 }
 
 func NewConfig() *Config {

@@ -4,16 +4,12 @@ S = UNKNOWN
 .PHONY: cli-build
 cli-build:
 	@echo "building cli"
-	cd cli && pwd && go build -o ../bin/ ./...;
+	cd cli && go build -o ../bin/topcli ./*.go;
 
 .PHONY: cli-run
 cli-run:
 	@echo "running cli"
-	@if [ "$(E)" == "UNKNOWN" && "$(S)" == "UNKNOWN" ]; then \
-		cd cli && pwd && go run main.go spider zhihu file; \
-	else \
-		cd cli && pwd && go run main.go spider $(E) $(S); \
-	fi
+	cd cli && go run main.go spider;
 
 .PHONY: client-build
 client-build:

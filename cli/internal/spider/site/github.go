@@ -1,4 +1,4 @@
-package endpoint
+package site
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	GITHUB_ENDPOINT = "github"
-	GITHUB_URL      = "https://github.com/trending"
+	GITHUB_SITE = "github"
+	GITHUB_URL  = "https://github.com/trending"
 )
 
 func Github(ctx context.Context) (tops []Top, err error) {

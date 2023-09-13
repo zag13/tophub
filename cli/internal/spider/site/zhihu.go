@@ -1,4 +1,4 @@
-package endpoint
+package site
 
 import (
 	"encoding/json"
@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	ZHIHU_ENDPOINT   = "zhihu"
-	ZHIHU_URL_PREFIX = "https://www.zhihu.com/question/"
-	ZHIHU_URL        = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
+	ZHIHU_SITE   = "zhihu"
+	ZHIHU_URL    = "https://www.zhihu.com/api/v3/feed/topstory/hot-lists/total?limit=50&desktop=true"
+	ZHIHU_PREFIX = "https://www.zhihu.com/question/"
 )
 
 func ZhiHu(opts ...Options) (tops []Top, err error) {
@@ -64,10 +64,10 @@ func ZhiHu(opts ...Options) (tops []Top, err error) {
 
 		tops = append(tops, Top{
 			SpiderTime: time.Now(),
-			Endpoint:   ZHIHU_ENDPOINT,
-			Ranking:    cast.ToInt64(i + 1),
+			Site:       ZHIHU_SITE,
+			Ranking:    cast.ToInt32(i + 1),
 			Title:      datum.Get("target").Get("title").MustString(),
-			Url:        ZHIHU_URL_PREFIX + datum.Get("target").Get("id").MustString(),
+			URL:        ZHIHU_PREFIX + cast.ToString(datum.Get("target").Get("id").MustInt64()),
 			Extra:      cast.ToString(extra),
 			Original:   cast.ToString(original),
 		})

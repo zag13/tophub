@@ -1,4 +1,4 @@
-package endpoint
+package site
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	WEIBO_ENDPOINT   = "weibo"
-	WEIBO_URL_PREFIX = "https://s.weibo.com"
-	WEIBO_URL        = "https://s.weibo.com/top/summary"
+	WEIBO_SITE   = "weibo"
+	WEIBO_URL    = "https://s.weibo.com/top/summary"
+	WEIBO_PREFIX = "https://s.weibo.com"
 	// WEIBO_URL2    = "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot"
 )
 
@@ -44,10 +44,10 @@ func WeiBo(ctx context.Context) (tops []Top, err error) {
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		tops = append(tops, Top{
 			SpiderTime: time.Now(),
-			Endpoint:   WEIBO_ENDPOINT,
-			Ranking:    ranking,
+			Site:       WEIBO_SITE,
+			Ranking:    cast.ToInt32(ranking),
 			Title:      selection.Find(".td-02 a").Text(),
-			Url:        WEIBO_URL_PREFIX + u,
+			URL:        WEIBO_PREFIX + u,
 			Extra:      "",
 			Original:   "",
 		})

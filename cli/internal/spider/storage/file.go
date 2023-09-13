@@ -2,13 +2,13 @@ package storage
 
 import (
 	"encoding/csv"
-	"github.com/zag13/tophub/cli/internal/config"
-	"github.com/zag13/tophub/cli/internal/spider/endpoint"
+	"github.com/zag13/tophub/cli/bootstrap"
+	"github.com/zag13/tophub/cli/internal/spider/site"
 	"os"
 )
 
-func File(tops []endpoint.Top) error {
-	file, err := os.OpenFile(config.C.FilePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+func File(tops []site.Top) error {
+	file, err := os.OpenFile(bootstrap.C.FilePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}

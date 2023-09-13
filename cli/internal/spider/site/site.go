@@ -1,4 +1,4 @@
-package endpoint
+package site
 
 import "time"
 
@@ -18,20 +18,20 @@ func WithUrl(url string) Options {
 
 type Top struct {
 	SpiderTime time.Time `json:"spider_time"`
-	Endpoint   string    `json:"endpoint"`
-	Ranking    int64     `json:"ranking"`
+	Site       string    `json:"site"`
+	Ranking    int32     `json:"ranking"`
 	Title      string    `json:"title"`
-	Url        string    `json:"url"`
+	URL        string    `json:"url"`
 	Extra      string    `json:"extra"`
 	Original   string    `json:"original"`
 }
 
 func (t Top) StringSlice() []string {
 	return []string{
-		t.SpiderTime.Format("2006-01-02 15:04:05"),
-		t.Endpoint,
+		t.SpiderTime.Format(time.DateTime),
+		t.Site,
 		t.Title,
-		t.Url,
+		t.URL,
 		t.Extra,
 		t.Original,
 	}

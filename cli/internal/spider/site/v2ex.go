@@ -1,4 +1,4 @@
-package endpoint
+package site
 
 import (
 	"context"
@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	V2EX_ENDPOINT   = "v2ex"
-	V2EX_URL        = "https://www.v2ex.com/?tab=hot"
+	V2EX_SITE = "v2ex"
+	V2EX_URL  = "https://www.v2ex.com/?tab=hot"
 )
 
 func V2EX(ctx context.Context) (tops []Top, err error) {
