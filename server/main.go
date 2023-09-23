@@ -28,7 +28,7 @@ func main() {
 	}
 
 	go func() {
-		// 服务连接
+		log.Printf("Listening and serving HTTP on %s\n", app.Config.Port)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("listen: %s\n", err)
 		}
