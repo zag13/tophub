@@ -33,3 +33,7 @@ tidy:
 	@echo "tidy"
 	cd cli && go mod tidy; \
 	cd ../server && go mod tidy;
+
+.PHONY: dk-server
+dk-server:
+	docker build -t tophub/server -f ./deploy/build/dockerfile-server .
