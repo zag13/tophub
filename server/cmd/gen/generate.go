@@ -19,7 +19,7 @@ func init() {
 		panic(fmt.Errorf("connect db fail: %w", err))
 	}
 
-	prepare(db) // prepare table for generate
+	prepare(db)
 }
 
 func main() {
@@ -35,4 +35,8 @@ func main() {
 	g.ApplyInterface(func(Querier) {}, g.GenerateAllTable()...)
 
 	g.Execute()
+}
+
+func prepare(db *gorm.DB) {
+	db.Exec(bootstrap.TableSQL)
 }

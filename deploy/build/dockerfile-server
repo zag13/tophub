@@ -20,7 +20,7 @@ WORKDIR /
 
 ENV TZ="Asia/Shanghai"
 
-COPY .env /app/www/
+COPY .env.docker /app/www/.env
 COPY --from=build-stage /build/tophub-server /app/www/
 
 EXPOSE 8080

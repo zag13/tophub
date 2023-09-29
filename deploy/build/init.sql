@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS tophub;
+
+GRANT ALL PRIVILEGES ON tophub.* TO 'default'@'%';
+
+FLUSH PRIVILEGES;
+

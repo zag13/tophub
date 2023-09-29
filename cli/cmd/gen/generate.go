@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/zag13/tophub/cli/bootstrap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
@@ -34,4 +35,8 @@ func main() {
 	g.ApplyBasic(g.GenerateAllTable()...)
 
 	g.Execute()
+}
+
+func prepare(db *gorm.DB) {
+	db.Exec(bootstrap.TableSQL)
 }

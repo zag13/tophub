@@ -34,6 +34,7 @@ tidy:
 	cd cli && go mod tidy; \
 	cd ../server && go mod tidy;
 
-.PHONY: dk-server
-dk-server:
-	docker build -t tophub/server -f ./deploy/build/dockerfile-server .
+.PHONY: dkc-up
+dkc-up:
+	@echo "docker compose up..."
+	cd deploy/docker-compose && docker compose up --build
