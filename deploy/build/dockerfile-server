@@ -14,7 +14,7 @@ RUN go mod download
 COPY server/ ./
 RUN go build -ldflags="-s -w" -o tophub-server *.go
 
-FROM gcr.io/distroless/static AS run-stage
+FROM zag13/distroless-static AS run-stage
 
 WORKDIR /
 
