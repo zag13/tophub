@@ -37,4 +37,4 @@ tidy:
 .PHONY: dkc-up
 dkc-up:
 	@echo "docker compose up..."
-	cd deploy/docker-compose && docker compose up --build
+	cd deploy/docker-compose && docker compose up --build -d
