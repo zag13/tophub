@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=20.8.0
+ARG NGINX_VERSION=1.25
+ARG MIRROR_URL=http://registry.npmmirror.com
+
+FROM node:${NODE_VERSION}-alpine as build-stage
+
+WORKDIR /build
+
+RUN npm install --global --registry=${MIRROR_URL} pnpm
+COPY client/ ./
+RUN pnpm install --registry=${MIRROR_URL}
+RUN pnpm build
+
+FROM nginx:${NGINX_VERSION}-alpine as run-stage
+
+WORKDIR /
+
+COPY --from=build-stage /build/dist /app/www/
+
+EXPOSE 80
