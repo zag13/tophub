@@ -15,11 +15,22 @@ services:
     ports:
       - 3000:80
     volumes:
-      - ../build/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ../build/etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
   ### cli ################################################
-  #  cli:
-  #    container_name: cli
+  cli:
+    depends_on:
+      - mysql
+    build:
+      context: ../../
+      dockerfile: deploy/build/dockerfile-cli
+    container_name: tophub_cli
+    hostname: tophub_cli
+    networks:
+      - mynet
+    volumes:
+      - ../build/etc/apt/sources.list:/etc/apt/sources.list
+      - ../build/etc/cron.d/crontab:/etc/cron.d/crontab
 
   ### server #############################################
   server:
@@ -32,8 +43,6 @@ services:
     hostname: tophub_server
     networks:
       - mynet
-#    ports:
-#      - 8080:8080
 
   ### MySQL ##############################################
   mysql:

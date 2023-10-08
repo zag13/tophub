@@ -4,7 +4,6 @@ Copyright © 2023 zag13
 package main
 
 import (
-	"flag"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -13,15 +12,15 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "topcli",
-	Short: "topcli is a cli tool for tophub.",
-	Long:  `topcli is a cli tool for tophub.`,
+	Use:   "tophub-cli",
+	Short: "tophub-cli is a cli tool for tophub.",
+	Long:  `tophub-cli is a cli tool for tophub.`,
 }
 
 func main() {
-	flag.Parse()
-
 	cobra.OnInitialize(bootstrap.InitConfig)
+
+	rootCmd.PersistentFlags().StringVarP(&bootstrap.C.EnvPath, "env", "e", "../.env", "the env path")
 
 	rootCmd.AddCommand(spider.CmdSpider)
 

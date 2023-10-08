@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1
+
+FROM golang:1.21 AS build-stage
+
+WORKDIR /build
+
+ENV CGO_ENABLED 0
+ENV GOOS linux
+ENV GOPROXY https://goproxy.cn,direct
+
+COPY cli/go.mod cli/go.sum ./
+RUN go mod download
+
+COPY cli/ ./
+RUN go build -ldflags="-s -w" -o tophub-cli *.go
+
+FROM debian:12-slim AS run-stage
+
+WORKDIR /
+
+RUN apt-get update && apt-get install -y cron
+
+ENV TZ="Asia/Shanghai"
+
+COPY .env.docker /app/www/.env
+COPY --from=build-stage /build/tophub-cli /app/www/
+
+CMD ["cron", "-f"]
