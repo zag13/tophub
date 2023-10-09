@@ -29,8 +29,7 @@ services:
     networks:
       - mynet
     volumes:
-      - ../build/etc/apt/sources.list:/etc/apt/sources.list
-      - ../build/etc/cron.d/crontab:/etc/cron.d/crontab
+      - ../build/etc/crontabs/root:/etc/crontabs/root
 
   ### server #############################################
   server:

@@ -14,15 +14,16 @@ RUN go mod download
 COPY cli/ ./
 RUN go build -ldflags="-s -w" -o tophub-cli *.go
 
-FROM debian:12-slim AS run-stage
+FROM alpine:3.18 AS run-stage
 
 WORKDIR /
 
-RUN apt-get update && apt-get install -y cron
-
-ENV TZ="Asia/Shanghai"
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
+    apk --no-cache add tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone
 
 COPY .env.docker /app/www/.env
 COPY --from=build-stage /build/tophub-cli /app/www/
 
-CMD ["cron", "-f"]
+CMD ["crond", "-f"]
