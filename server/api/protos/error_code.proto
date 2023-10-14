@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.api.types;
+
+option go_package = "server/api/types;types";
+
+enum ErrorCode {
+  UNKNOWN_ERROR = 0;
+
+  SYSTEM_BUSY = 10000;
+  INTERNAL_ERROR = 10001;
+  INVALID_PARAMETER = 10002;
+  INVALID_REQUEST = 10003;
+  INVALID_SIGNATURE = 10004;
+}

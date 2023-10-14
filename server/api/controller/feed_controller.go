@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/zag13/tophub/server/api/types"
 	"github.com/zag13/tophub/server/dal"
-	"github.com/zag13/tophub/server/domain"
 )
 
 type FeedController struct {
@@ -13,29 +13,29 @@ type FeedController struct {
 }
 
 func (fc *FeedController) Feed(c *gin.Context) {
-	var req domain.FeedRequest
+	var req types.FeedRequest
 
 	err := c.ShouldBind(&req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, domain.Error(domain.ErrorCodeInvalidParameter, err.Error()))
+		c.JSON(http.StatusBadRequest, types.ErrorResponse{Code: types.ErrorCode_INVALID_PARAMETER, Message: err.Error()})
 		return
 	}
 
 	vals, err := fc.NewsModel.FindLatest(c, map[string]any{"Site": req.Site})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, domain.Error(domain.ErrorCodeInternalError, err.Error()))
+		c.JSON(http.StatusInternalServerError, types.ErrorResponse{Code: types.ErrorCode_INTERNAL_ERROR, Message: err.Error()})
 		return
 	}
 
-	var feeds []domain.Feed
+	var feeds []*types.Feed
 	for _, val := range vals {
-		feeds = append(feeds, domain.Feed{
+		feeds = append(feeds, &types.Feed{
 			Site:    val.Site,
 			Ranking: val.Ranking,
 			Title:   val.Title,
-			URL:     val.URL,
+			Url:     val.URL,
 		})
 	}
 
-	domain.ToSuccessResponse(c, domain.FeedData{List: feeds})
+	c.JSON(http.StatusOK, types.FeedResponse{Data: &types.FeedData{List: feeds}})
 }

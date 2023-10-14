@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package server.api.types;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "error_code.proto";
+
+option go_package = "server/api/types;types";
+
+service TopHubService {
+  rpc Ping (google.protobuf.Empty) returns (google.protobuf.StringValue) {
+    option (google.api.http).get = "/ping";
+  }
+
+  rpc Feed (FeedRequest) returns (FeedResponse) {
+    option (google.api.http).post = "/feed";
+    option (google.api.http).body = "*";
+  }
+}
+
+
+
+message FeedRequest {
+  string site = 2; // @gotags: binding:"required"
+}
+message FeedResponse {
+  ErrorCode code = 1;
+  string message = 2;
+  FeedData data = 3;
+}
+message FeedData {
+  repeated Feed list = 1;
+}
+message Feed {
+  string site = 1;
+  int32 ranking = 2;
+  string title = 3;
+  string url = 4;
+}
+
+
+
+

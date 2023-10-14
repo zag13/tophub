@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package server.api.types;
+
+import "google/protobuf/any.proto";
+import "error_code.proto";
+
+option go_package = "server/api/types;types";
+
+message ErrorResponse {
+  ErrorCode code = 1;
+  string message = 2;
+  repeated google.protobuf.Any details = 3;
+}
+
+message PageInfo {
+  int32 page = 1;
+  int32 pageSize = 2;
+  int32 totalNumber = 3;
+  int32 totalPage = 4;
+}

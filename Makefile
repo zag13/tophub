@@ -34,6 +34,15 @@ tidy:
 	cd cli && go mod tidy; \
 	cd ../server && go mod tidy;
 
+.PHONY: protoc
+protoc:
+	@echo "protoc ..."
+	cd server && protoc --proto_path=./api/protos --proto_path=./third_party \
+		--go_out=paths=source_relative:./api/types \
+		--openapi_out=default_response=true:. \
+		./api/protos/*.proto && \
+	protoc-go-inject-tag -input=./api/types/*.pb.go
+
 .PHONY: dkc-up
 dkc-up:
 	@echo "docker compose up..."
