@@ -5,6 +5,7 @@ ARG NGINX_VERSION=1.25
 
 FROM node:${NODE_VERSION}-alpine as build-stage
 
+ARG COPY_CLIENT=false
 ARG CHANGE_SOURCE=false
 ARG MIRROR_URL=http://registry.npmmirror.com
 
@@ -17,6 +18,7 @@ RUN if [ ${COPY_CLIENT} = false ]; then \
         npm install --registry=${MIRROR_URL} && npm build ; \
       else \
         npm install && npm build ; \
+      fi ;\
     fi
 
 FROM nginx:${NGINX_VERSION}-alpine as run-stage
