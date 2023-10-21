@@ -41,7 +41,7 @@ protoc:
 .PHONY: dkc-up-c
 dkc-up-c:
 	@echo "docker compose up (change source)..."
-	cd deploy/docker-compose && docker compose up --build -d -e "CHANGE_SOURCE=true"
+	cd deploy/docker-compose && export CHANGE_SOURCE=true && docker compose up --build -d
 
 .PHONY: dkc-up
 dkc-up:
