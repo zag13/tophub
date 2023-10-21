@@ -1,7 +1,6 @@
 package site
 
 import (
-	"encoding/json"
 	"github.com/bitly/go-simplejson"
 	"github.com/spf13/cast"
 	"io"
@@ -51,21 +50,13 @@ func ZhiHu(opts ...Options) (tops []Top, err error) {
 	for i := range data.MustArray() {
 		datum := data.GetIndex(i)
 
-		extra, err := json.Marshal(map[string]string{
-			"image": datum.Get("children").GetIndex(0).Get("thumbnail").MustString(),
-		})
-		if err != nil {
-			return nil, err
-		}
-
 		tops = append(tops, Top{
-			SpiderTime:  spiderTime,
-			Site:        ZHIHU_SITE,
-			Rank:        cast.ToInt32(i + 1),
-			Title:       datum.Get("target").Get("title").MustString(),
-			Url:         ZHIHU_PREFIX + cast.ToString(datum.Get("target").Get("id").MustInt64()),
-			Description: datum.Get("target").Get("excerpt").MustString(),
-			Extra:       cast.ToString(extra),
+			SpiderTime: spiderTime,
+			Site:       ZHIHU_SITE,
+			Rank:       cast.ToInt32(i + 1),
+			Title:      datum.Get("target").Get("title").MustString(),
+			Url:        ZHIHU_PREFIX + cast.ToString(datum.Get("target").Get("id").MustInt64()),
+			Extra:      "{}",
 		})
 	}
 

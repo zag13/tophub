@@ -35,8 +35,7 @@ const TableSQL = "CREATE TABLE IF NOT EXISTS tops " +
 	"    site        varchar(32) COLLATE utf8mb4_general_ci                         NOT NULL DEFAULT ''," +
 	"    `rank` 	 tinyint unsigned                                               NOT NULL DEFAULT '0'," +
 	"    title       varchar(128) COLLATE utf8mb4_general_ci                        NOT NULL DEFAULT ''," +
-	"    url         varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT ''," +
-	"    description varchar(512) COLLATE utf8mb4_general_ci                        NOT NULL DEFAULT ''," +
+	"    url         varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT ''," +
 	"    extra		json                                                            NOT NULL," +
 	"    PRIMARY KEY (id)," +
 	"    KEY idx_spider_time_site (spider_time DESC, site)" +

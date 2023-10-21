@@ -33,7 +33,6 @@ func newTop(db *gorm.DB, opts ...gen.DOOption) top {
 	_top.Rank = field.NewInt32(tableName, "rank")
 	_top.Title = field.NewString(tableName, "title")
 	_top.URL = field.NewString(tableName, "url")
-	_top.Description = field.NewString(tableName, "description")
 	_top.Extra = field.NewString(tableName, "extra")
 
 	_top.fillFieldMap()
@@ -44,15 +43,14 @@ func newTop(db *gorm.DB, opts ...gen.DOOption) top {
 type top struct {
 	topDo topDo
 
-	ALL         field.Asterisk
-	ID          field.Int64
-	SpiderTime  field.Time
-	Site        field.String
-	Rank        field.Int32
-	Title       field.String
-	URL         field.String
-	Description field.String
-	Extra       field.String
+	ALL        field.Asterisk
+	ID         field.Int64
+	SpiderTime field.Time
+	Site       field.String
+	Rank       field.Int32
+	Title      field.String
+	URL        field.String
+	Extra      field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -75,7 +73,6 @@ func (t *top) updateTableName(table string) *top {
 	t.Rank = field.NewInt32(table, "rank")
 	t.Title = field.NewString(table, "title")
 	t.URL = field.NewString(table, "url")
-	t.Description = field.NewString(table, "description")
 	t.Extra = field.NewString(table, "extra")
 
 	t.fillFieldMap()
@@ -101,14 +98,13 @@ func (t *top) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (t *top) fillFieldMap() {
-	t.fieldMap = make(map[string]field.Expr, 8)
+	t.fieldMap = make(map[string]field.Expr, 7)
 	t.fieldMap["id"] = t.ID
 	t.fieldMap["spider_time"] = t.SpiderTime
 	t.fieldMap["site"] = t.Site
 	t.fieldMap["rank"] = t.Rank
 	t.fieldMap["title"] = t.Title
 	t.fieldMap["url"] = t.URL
-	t.fieldMap["description"] = t.Description
 	t.fieldMap["extra"] = t.Extra
 }
 

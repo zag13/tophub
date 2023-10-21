@@ -65,31 +65,25 @@ onMounted(async () => {
       </el-col>
     </el-row>
   </el-affix>
-  <el-row justify="center" class="bg-white my-10">
+  <el-row justify="center" class="custom-channel-info bg-white my-10">
     <el-col :xs="22" :sm="20" :lg="18" :xl="16">
-      <el-card>
+      <el-card class="py-3">
         <section
           v-for="(v, i) in tops"
           :key="i"
-          class="flex py-3"
-          style="height: 7.5rem"
+          class="flex py-3 h-17 px-5 text-gray-800"
+          style="font-size: 1.05rem;font-weight: 400;"
         >
-          <div>
-            <p class="w-7">{{ v.rank }}</p>
-          </div>
-          <div class="w-full pr-7">
+          <div class="w-full">
             <a
               :href="v.url"
               :title="v.title"
               target="_blank"
               class="visited:text-gray-300"
             >
-              <h2 class="line-clamp-2" style="font-size: 1.125rem;font-weight: 700;">
-                {{ v.title }}
+              <h2 class="line-clamp-2">
+                {{ v.rank }} &nbsp;&nbsp; {{ v.title }}
               </h2>
-              <p class="line-clamp-2 mt-2 break-al">
-                {{ v.description }}
-              </p>
             </a>
           </div>
         </section>
@@ -97,3 +91,10 @@ onMounted(async () => {
     </el-col>
   </el-row>
 </template>
+
+<style>
+.custom-channel-info  .el-card__body {
+    padding: 0;
+}
+</style>
+```

@@ -39,8 +39,7 @@ message Top {
   int32 rank = 3;
   string title = 4;
   string url = 5;
-  string description = 6;
-  string extra = 7;
+  string extra = 6;
 }
 
 

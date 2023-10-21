@@ -12,14 +12,13 @@ const TableNameTop = "tops"
 
 // Top mapped from table <tops>
 type Top struct {
-	ID          int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	SpiderTime  time.Time `gorm:"column:spider_time;not null" json:"spider_time"`
-	Site        string    `gorm:"column:site;not null" json:"site"`
-	Rank        int32     `gorm:"column:rank;not null" json:"rank"`
-	Title       string    `gorm:"column:title;not null" json:"title"`
-	URL         string    `gorm:"column:url;not null" json:"url"`
-	Description string    `gorm:"column:description;not null" json:"description"`
-	Extra       string    `gorm:"column:extra;not null" json:"extra"`
+	ID         int64     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	SpiderTime time.Time `gorm:"column:spider_time;not null" json:"spider_time"`
+	Site       string    `gorm:"column:site;not null" json:"site"`
+	Rank       int32     `gorm:"column:rank;not null" json:"rank"`
+	Title      string    `gorm:"column:title;not null" json:"title"`
+	URL        string    `gorm:"column:url;not null" json:"url"`
+	Extra      string    `gorm:"column:extra;not null" json:"extra"`
 }
 
 // TableName Top's table name

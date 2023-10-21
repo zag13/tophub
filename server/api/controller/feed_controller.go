@@ -31,13 +31,12 @@ func (fc *FeedController) Feed(c *gin.Context) {
 	var tops []*types.Top
 	for _, val := range vals {
 		tops = append(tops, &types.Top{
-			SpiderTime:  val.SpiderTime.Format(time.DateTime),
-			Site:        val.Site,
-			Rank:        val.Rank,
-			Title:       val.Title,
-			Url:         val.URL,
-			Description: val.Description,
-			Extra:       val.Extra,
+			SpiderTime: val.SpiderTime.Format(time.DateTime),
+			Site:       val.Site,
+			Rank:       val.Rank,
+			Title:      val.Title,
+			Url:        val.URL,
+			Extra:      val.Extra,
 		})
 	}
 

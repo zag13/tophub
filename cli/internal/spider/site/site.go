@@ -20,13 +20,12 @@ func WithUrl(url string) Options {
 }
 
 type Top struct {
-	SpiderTime  time.Time `json:"spider_time"`
-	Site        string    `json:"site"`
-	Rank        int32     `json:"rank"`
-	Title       string    `json:"title"`
-	Url         string    `json:"url"`
-	Description string    `json:"description"`
-	Extra       string    `json:"extra"`
+	SpiderTime time.Time `json:"spider_time"`
+	Site       string    `json:"site"`
+	Rank       int32     `json:"rank"`
+	Title      string    `json:"title"`
+	Url        string    `json:"url"`
+	Extra      string    `json:"extra"`
 }
 
 func (t Top) StringSlice() []string {
@@ -36,7 +35,6 @@ func (t Top) StringSlice() []string {
 		cast.ToString(t.Rank),
 		t.Title,
 		t.Url,
-		t.Description,
 		t.Extra,
 	}
 }

@@ -15,13 +15,12 @@ func DB(tops []site.Top) error {
 	topsInsert := make([]*model.Top, len(tops))
 	for i, top := range tops {
 		topsInsert[i] = &model.Top{
-			SpiderTime:  top.SpiderTime,
-			Site:        top.Site,
-			Rank:        top.Rank,
-			Title:       stringz.TruncateString(top.Title, 128),
-			URL:         top.Url,
-			Description: stringz.TruncateString(top.Description, 512),
-			Extra:       top.Extra,
+			SpiderTime: top.SpiderTime,
+			Site:       top.Site,
+			Rank:       top.Rank,
+			Title:      stringz.TruncateString(top.Title, 128),
+			URL:        top.Url,
+			Extra:      top.Extra,
 		}
 	}
 

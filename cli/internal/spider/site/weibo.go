@@ -56,13 +56,12 @@ func WeiBo(opts ...Options) (tops []Top, err error) {
 
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		tops = append(tops, Top{
-			SpiderTime:  spiderTime,
-			Site:        WEIBO_SITE,
-			Rank:        cast.ToInt32(ranking),
-			Title:       selection.Find(".td-02 a").Text(),
-			Url:         WEIBO_PREFIX + u,
-			Description: "",
-			Extra:       "{}",
+			SpiderTime: spiderTime,
+			Site:       WEIBO_SITE,
+			Rank:       cast.ToInt32(ranking),
+			Title:      selection.Find(".td-02 a").Text(),
+			Url:        WEIBO_PREFIX + u,
+			Extra:      "{}",
 		})
 	})
 	return

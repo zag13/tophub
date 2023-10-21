@@ -6,7 +6,7 @@ const channelsApi = {
 };
 
 export type FeedResult = {
-  list: [Feed];
+  list: Feed[];
 };
 
 export type Feed = {
@@ -14,7 +14,6 @@ export type Feed = {
   rank: number;
   title: string;
   url: string;
-  description: string;
   extra: {};
 };
 
