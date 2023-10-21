@@ -1,3 +1,8 @@
+.PHONY: build-client
+build-client:
+	@echo "building client"
+	cd client && pnpm build
+
 .PHONY: run-client
 run-client:
 	@echo "running client"
@@ -42,6 +47,11 @@ protoc:
 dkc-up-c:
 	@echo "docker compose up (change source)..."
 	cd deploy/docker-compose && export CHANGE_SOURCE=true && docker compose up --build -d
+
+.PHONY: dkc-up-cc
+dkc-up-cc:
+	@echo "docker compose up (copy client)..."
+	cd deploy/docker-compose && export COPY_CLIENT=true && docker compose up --build -d
 
 .PHONY: dkc-up
 dkc-up:

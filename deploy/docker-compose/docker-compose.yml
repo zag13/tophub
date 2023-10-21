@@ -12,6 +12,7 @@ services:
       dockerfile: deploy/build/dockerfile-client
       args:
         - CHANGE_SOURCE=${CHANGE_SOURCE}
+        - COPY_CLIENT=${COPY_CLIENT}
     container_name: tophub_client
     hostname: tophub_client
     networks:
