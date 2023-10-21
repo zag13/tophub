@@ -21,8 +21,9 @@ var (
 	sites []string
 
 	siteHandlers = map[string]func(...site.Options) (tops []site.Top, err error){
-		"zhihu": site.ZhiHu,
-		"weibo": site.WeiBo,
+		"zhihu":       site.ZhiHu,
+		"weibo":       site.WeiBo,
+		"hacker-news": site.HackerNews,
 	}
 
 	stgHandlers = map[string]func(tops []site.Top) error{

@@ -22,6 +22,11 @@ const channels = ref<
     url: "/c/weibo",
     site: "weibo",
   },
+  {
+    name: "Hacker News",
+    url: "/c/hacker-news",
+    site: "hacker-news",
+  },
 ]);
 const currentChannel = computed(() => {
   return channels.value.find((channel) => channel.url === route.path);

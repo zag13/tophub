@@ -27,6 +27,11 @@ const router: Router = createRouter({
                             name: "c-weibo",
                             component: () => import("@/views/channels/index.vue"),
                         },
+                        {
+                            path: "/c/hacker-news",
+                            name: "c-hacker-news",
+                            component: () => import("@/views/channels/index.vue"),
+                        },
                     ],
                 },
             ],

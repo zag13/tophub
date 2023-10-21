@@ -49,8 +49,8 @@ func WeiBo(opts ...Options) (tops []Top, err error) {
 
 	spiderTime := time.Now()
 	doc.Find("#pl_top_realtimehot table tbody tr").Each(func(i int, selection *goquery.Selection) {
-		ranking := cast.ToInt64(selection.Find(".td-01").Text())
-		if ranking == 0 {
+		rank := cast.ToInt32(selection.Find(".td-01").Text())
+		if rank == 0 {
 			return
 		}
 
@@ -58,7 +58,7 @@ func WeiBo(opts ...Options) (tops []Top, err error) {
 		tops = append(tops, Top{
 			SpiderTime: spiderTime,
 			Site:       WEIBO_SITE,
-			Rank:       cast.ToInt32(ranking),
+			Rank:       rank,
 			Title:      selection.Find(".td-02 a").Text(),
 			Url:        WEIBO_PREFIX + u,
 			Extra:      "{}",
