@@ -1,15 +1,15 @@
 # syntax=docker/dockerfile:1
 
-ARG CHANGE_SOURCE=false
-
 FROM golang:1.21 AS build-stage
+
+ARG CHANGE_SOURCE=false
 
 WORKDIR /build
 
 ENV CGO_ENABLED 0
 ENV GOOS linux
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
-    ENV GOPROXY https://goproxy.cn,direct \
+    export GOPROXY=https://goproxy.cn,direct \
 ;fi
 
 COPY cli/go.mod cli/go.sum ./
@@ -20,10 +20,12 @@ RUN go build -ldflags="-s -w" -o tophub-cli *.go
 
 FROM alpine:3.18 AS run-stage
 
+ARG CHANGE_SOURCE=false
+
 WORKDIR /
 
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
-    sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories \
 ;fi
 RUN apk --no-cache add tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \

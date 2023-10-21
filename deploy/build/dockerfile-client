@@ -1,11 +1,12 @@
 # syntax=docker/dockerfile:1
 
-ARG CHANGE_SOURCE=false
 ARG NODE_VERSION=20.8.0
 ARG NGINX_VERSION=1.25
-ARG MIRROR_URL=http://registry.npmmirror.com
 
 FROM node:${NODE_VERSION}-alpine as build-stage
+
+ARG CHANGE_SOURCE=false
+ARG MIRROR_URL=http://registry.npmmirror.com
 
 WORKDIR /build
 
