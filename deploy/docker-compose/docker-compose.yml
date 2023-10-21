@@ -30,8 +30,6 @@ services:
     hostname: tophub_cli
     networks:
       - mynet
-    volumes:
-      - ../build/etc/crontabs/root:/etc/crontabs/root
     command: [ "crond", "-f" ]
 
   ### server #############################################
