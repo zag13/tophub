@@ -5,6 +5,8 @@ name: tophub
 services:
   ### client #############################################
   client:
+    depends_on:
+      - server
     build:
       context: ../../
       dockerfile: deploy/build/dockerfile-client

@@ -1,7 +1,6 @@
 package site
 
 import (
-	"context"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/spf13/cast"
 	"net/http"
@@ -15,8 +14,20 @@ const (
 	// WEIBO_URL2    = "https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot"
 )
 
-func WeiBo(ctx context.Context) (tops []Top, err error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", WEIBO_URL, nil)
+func WeiBo(opts ...Options) (tops []Top, err error) {
+	var options options
+	for _, opt := range opts {
+		opt(&options)
+	}
+
+	var url string
+	if options.url != nil && *options.url != "" {
+		url = *options.url
+	} else {
+		url = WEIBO_URL
+	}
+
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +35,8 @@ func WeiBo(ctx context.Context) (tops []Top, err error) {
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36")
 	req.Header.Set("cookie", "SUB=_2AkMV0R1pdcPxrAVTn_EQyWvgZY5H-jymBHSfAn7uJhIyOhhu7nECqSVutBF-XDXcz_XKfP8ConVYk8o_32dN56GH; SUBP=0033WrSXqPxfM72wWs9jqgMF555t")
 
-	resp, err := http.DefaultClient.Do(req)
+	client := &http.Client{Timeout: 3 * time.Second}
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -35,6 +47,7 @@ func WeiBo(ctx context.Context) (tops []Top, err error) {
 		return nil, err
 	}
 
+	spiderTime := time.Now()
 	doc.Find("#pl_top_realtimehot table tbody tr").Each(func(i int, selection *goquery.Selection) {
 		ranking := cast.ToInt64(selection.Find(".td-01").Text())
 		if ranking == 0 {
@@ -43,13 +56,13 @@ func WeiBo(ctx context.Context) (tops []Top, err error) {
 
 		u, _ := selection.Find(".td-02 a").Attr("href")
 		tops = append(tops, Top{
-			SpiderTime: time.Now(),
-			Site:       WEIBO_SITE,
-			Ranking:    cast.ToInt32(ranking),
-			Title:      selection.Find(".td-02 a").Text(),
-			URL:        WEIBO_PREFIX + u,
-			Extra:      "",
-			Original:   "",
+			SpiderTime:  spiderTime,
+			Site:        WEIBO_SITE,
+			Rank:        cast.ToInt32(ranking),
+			Title:       selection.Find(".td-02 a").Text(),
+			Url:         WEIBO_PREFIX + u,
+			Description: "",
+			Extra:       "{}",
 		})
 	})
 	return

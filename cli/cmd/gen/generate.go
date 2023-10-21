@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/zag13/tophub/cli/bootstrap"
@@ -13,6 +14,7 @@ var db *gorm.DB
 var err error
 
 func init() {
+	flag.StringVar(&bootstrap.C.EnvPath, "env", "../.env", "the env path")
 	bootstrap.InitConfig()
 	db, err = gorm.Open(mysql.Open(bootstrap.C.MySQLDSN))
 	if err != nil {

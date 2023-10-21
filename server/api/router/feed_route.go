@@ -8,7 +8,7 @@ import (
 
 func NewFeedRoute(q *dal.Query, group *gin.RouterGroup) {
 	c := controller.FeedController{
-		NewsModel: dal.NewNewsModel(q),
+		TopsModel: dal.NewTopsModel(q),
 	}
 	group.POST("/feed", c.Feed)
 }

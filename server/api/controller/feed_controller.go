@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zag13/tophub/server/api/types"
@@ -9,7 +10,7 @@ import (
 )
 
 type FeedController struct {
-	NewsModel dal.NewsModel
+	TopsModel dal.TopsModel
 }
 
 func (fc *FeedController) Feed(c *gin.Context) {
@@ -21,21 +22,24 @@ func (fc *FeedController) Feed(c *gin.Context) {
 		return
 	}
 
-	vals, err := fc.NewsModel.FindLatest(c, map[string]any{"Site": req.Site})
+	vals, err := fc.TopsModel.FindLatest(c, map[string]any{"Site": req.Site})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, types.ErrorResponse{Code: types.ErrorCode_INTERNAL_ERROR, Message: err.Error()})
 		return
 	}
 
-	var feeds []*types.Feed
+	var tops []*types.Top
 	for _, val := range vals {
-		feeds = append(feeds, &types.Feed{
-			Site:    val.Site,
-			Ranking: val.Ranking,
-			Title:   val.Title,
-			Url:     val.URL,
+		tops = append(tops, &types.Top{
+			SpiderTime:  val.SpiderTime.Format(time.DateTime),
+			Site:        val.Site,
+			Rank:        val.Rank,
+			Title:       val.Title,
+			Url:         val.URL,
+			Description: val.Description,
+			Extra:       val.Extra,
 		})
 	}
 
-	c.JSON(http.StatusOK, types.FeedResponse{Data: &types.FeedData{List: feeds}})
+	c.JSON(http.StatusOK, types.FeedResponse{Data: &types.FeedData{List: tops}})
 }

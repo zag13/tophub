@@ -31,13 +31,16 @@ message FeedResponse {
   FeedData data = 3;
 }
 message FeedData {
-  repeated Feed list = 1;
+  repeated Top list = 1;
 }
-message Feed {
-  string site = 1;
-  int32 ranking = 2;
-  string title = 3;
-  string url = 4;
+message Top {
+  string spider_time = 1;
+  string site = 2;
+  int32 rank = 3;
+  string title = 4;
+  string url = 5;
+  string description = 6;
+  string extra = 7;
 }
 
 

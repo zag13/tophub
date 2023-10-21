@@ -22,6 +22,7 @@ var (
 
 	siteHandlers = map[string]func(...site.Options) (tops []site.Top, err error){
 		"zhihu": site.ZhiHu,
+		"weibo": site.WeiBo,
 	}
 
 	stgHandlers = map[string]func(tops []site.Top) error{

@@ -11,9 +11,11 @@ export type FeedResult = {
 
 export type Feed = {
   site: string;
-  ranking: number;
+  rank: number;
   title: string;
   url: string;
+  description: string;
+  extra: {};
 };
 
 export const feed = (data?: { site?: string }) => {

@@ -1,17 +1,12 @@
-.PHONY: build-client
-build-client:
-	@echo "building client"
-	cd client && pnpm build
-
 .PHONY: run-client
 run-client:
 	@echo "running client"
 	cd client && pnpm dev
 
-.PHONY: build-cli
-build-cli:
-	@echo "building cli"
-	cd cli && go build -o ../bin/topcli ./*.go;
+.PHONY: gen-cli
+gen-cli:
+	@echo "generate cli dal..."
+	cd cli && go run cmd/gen/*.go
 
 .PHONY: run-cli
 run-cli:

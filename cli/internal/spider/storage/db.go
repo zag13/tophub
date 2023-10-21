@@ -6,23 +6,24 @@ import (
 	"github.com/zag13/tophub/cli/dal"
 	"github.com/zag13/tophub/cli/dal/model"
 	"github.com/zag13/tophub/cli/internal/spider/site"
-	"time"
+	"github.com/zag13/tophub/cli/utils/stringz"
 )
 
 func DB(tops []site.Top) error {
 	bootstrap.InitDatabase()
 
-	news := make([]*model.News, len(tops))
-	spiderTime := time.Now()
+	topsInsert := make([]*model.Top, len(tops))
 	for i, top := range tops {
-		news[i] = &model.News{
-			SpiderTime: spiderTime,
-			Site:       top.Site,
-			Ranking:    top.Ranking,
-			Title:      top.Title,
-			URL:        top.URL,
+		topsInsert[i] = &model.Top{
+			SpiderTime:  top.SpiderTime,
+			Site:        top.Site,
+			Rank:        top.Rank,
+			Title:       stringz.TruncateString(top.Title, 128),
+			URL:         top.Url,
+			Description: stringz.TruncateString(top.Description, 512),
+			Extra:       top.Extra,
 		}
 	}
 
-	return dal.Q.News.WithContext(context.Background()).CreateInBatches(news, 20)
+	return dal.Q.Top.WithContext(context.Background()).CreateInBatches(topsInsert, 20)
 }

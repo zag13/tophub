@@ -46,30 +46,26 @@ func ZhiHu(opts ...Options) (tops []Top, err error) {
 		return nil, err
 	}
 
+	spiderTime := time.Now()
 	data := j.Get("data")
 	for i := range data.MustArray() {
 		datum := data.GetIndex(i)
 
 		extra, err := json.Marshal(map[string]string{
-			"description": datum.Get("target").Get("excerpt").MustString(),
-			"image":       datum.Get("children").GetIndex(0).Get("thumbnail").MustString(),
+			"image": datum.Get("children").GetIndex(0).Get("thumbnail").MustString(),
 		})
-		if err != nil {
-			return nil, err
-		}
-		original, err := json.Marshal(datum)
 		if err != nil {
 			return nil, err
 		}
 
 		tops = append(tops, Top{
-			SpiderTime: time.Now(),
-			Site:       ZHIHU_SITE,
-			Ranking:    cast.ToInt32(i + 1),
-			Title:      datum.Get("target").Get("title").MustString(),
-			URL:        ZHIHU_PREFIX + cast.ToString(datum.Get("target").Get("id").MustInt64()),
-			Extra:      cast.ToString(extra),
-			Original:   cast.ToString(original),
+			SpiderTime:  spiderTime,
+			Site:        ZHIHU_SITE,
+			Rank:        cast.ToInt32(i + 1),
+			Title:       datum.Get("target").Get("title").MustString(),
+			Url:         ZHIHU_PREFIX + cast.ToString(datum.Get("target").Get("id").MustInt64()),
+			Description: datum.Get("target").Get("excerpt").MustString(),
+			Extra:       cast.ToString(extra),
 		})
 	}
 
