@@ -38,6 +38,11 @@ protoc:
 		./api/protos/*.proto && \
 	protoc-go-inject-tag -input=./api/types/*.pb.go
 
+.PHONY: dkc-up-c
+dkc-up-c:
+	@echo "docker compose up (change source)..."
+	cd deploy/docker-compose && docker compose up --build -d -e "CHANGE_SOURCE=true"
+
 .PHONY: dkc-up
 dkc-up:
 	@echo "docker compose up..."

@@ -1,12 +1,16 @@
 # syntax=docker/dockerfile:1
 
+ARG CHANGE_SOURCE=false
+
 FROM golang:1.21 AS build-stage
 
 WORKDIR /build
 
 ENV CGO_ENABLED 0
 ENV GOOS linux
-ENV GOPROXY https://goproxy.cn,direct
+RUN if [ ${CHANGE_SOURCE} = true ]; then \
+    ENV GOPROXY https://goproxy.cn,direct \
+;fi
 
 COPY server/go.mod server/go.sum ./
 RUN go mod download

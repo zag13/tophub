@@ -10,6 +10,8 @@ services:
     build:
       context: ../../
       dockerfile: deploy/build/dockerfile-client
+      args:
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: tophub_client
     hostname: tophub_client
     networks:
@@ -26,6 +28,8 @@ services:
     build:
       context: ../../
       dockerfile: deploy/build/dockerfile-cli
+      args:
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: tophub_cli
     hostname: tophub_cli
     networks:
@@ -39,6 +43,8 @@ services:
     build:
       context: ../../
       dockerfile: deploy/build/dockerfile-server
+      args:
+        - CHANGE_SOURCE=${CHANGE_SOURCE}
     container_name: tophub_server
     hostname: tophub_server
     networks:

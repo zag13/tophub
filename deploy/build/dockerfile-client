@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 
+ARG CHANGE_SOURCE=false
 ARG NODE_VERSION=20.8.0
 ARG NGINX_VERSION=1.25
 ARG MIRROR_URL=http://registry.npmmirror.com
@@ -8,10 +9,14 @@ FROM node:${NODE_VERSION}-alpine as build-stage
 
 WORKDIR /build
 
-RUN npm install --global --registry=${MIRROR_URL} pnpm
 COPY client/ ./
-RUN pnpm install --registry=${MIRROR_URL}
-RUN pnpm build
+
+RUN if [ ${CHANGE_SOURCE} = true ]; then \
+      npm install --registry=${MIRROR_URL} ; \
+    else \
+      npm install ; \
+    fi
+RUN npm run build
 
 FROM nginx:${NGINX_VERSION}-alpine as run-stage
 
