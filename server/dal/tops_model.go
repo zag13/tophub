@@ -56,10 +56,9 @@ func (m *customTopsModel) FindLatest(ctx context.Context, qry map[string]any) ([
 	} else {
 		if val, ok := qry["Site"].(string); ok && val != "" {
 			conds = append(conds, news.Site.Eq(val))
+			conds = append(conds, news.WithContext(ctx).Columns(news.SpiderTime).Eq(news.WithContext(ctx).Where(news.Site.Eq(val)).Select(news.SpiderTime.Max())))
 		}
 	}
-
-	conds = append(conds, news.WithContext(ctx).Columns(news.SpiderTime).Eq(news.WithContext(ctx).Select(news.SpiderTime.Max())))
 
 	return m.Q.Top.WithContext(ctx).Where(conds...).Find()
 }
