@@ -35,3 +35,7 @@ Thumbs.db
 # ------------------------------------------------------------
 .env
 storage/
+**/openapi/.openapi-generator
+**/openapi/.npmignore
+**/openapi/.openapi-generator-ignore
+**/openapi/git_push.sh

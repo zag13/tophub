@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { Feed, feed } from "@/api/channels.ts";
+import {computed, onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import {Top} from "@/openapi";
+import {customApiOOP} from "@/utils/http/oop.ts";
 
 const route = useRoute();
 
@@ -32,12 +33,12 @@ const currentChannel = computed(() => {
   return channels.value.find((channel) => channel.url === route.path);
 });
 
-const tops = ref<Feed[]>([]);
+const tops = ref<Top[]>([]);
 
 onMounted(async () => {
-  feed({ site: currentChannel.value?.site })
-    .then(({ data }) => {
-      tops.value = data.list;
+  customApiOOP.topHubServiceFeed({site: currentChannel.value?.site})
+    .then(({data}) => {
+      console.log(data);
     })
     .catch((err) => {
       console.log(err);
@@ -98,8 +99,8 @@ onMounted(async () => {
 </template>
 
 <style>
-.custom-channel-info  .el-card__body {
-    padding: 0;
+.custom-channel-info .el-card__body {
+  padding: 0;
 }
 </style>
 ```
