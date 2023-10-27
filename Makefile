@@ -41,15 +41,11 @@ protoc:
 		--go_out=paths=source_relative:./api/types \
 		--openapi_out=default_response=true:. \
 		./api/protos/*.proto && \
-	protoc-go-inject-tag -input=./api/types/*.pb.go
-
-.PHONY: openapi
-openapi:
-	@echo "openapi ..."
-	cd server && openapi-generator generate -i ./openapi.yaml \
-		-g typescript-axios \
-		-o ../client/src/openapi \
-		--additional-properties=supportsES6=true
+	protoc-go-inject-tag -input=./api/types/*.pb.go && \
+	openapi-generator generate -i ./openapi.yaml \
+    		-g typescript-axios \
+    		-o ../client/src/openapi \
+    		--additional-properties=supportsES6=true
 
 .PHONY: dkc-up
 dkc-up:
@@ -59,9 +55,9 @@ dkc-up:
 .PHONY: dkc-up-c
 dkc-up-c:
 	@echo "docker compose up (change source)..."
-	cd deploy/docker-compose && export CHANGE_SOURCE=true && docker compose up --build -d
+	cd deploy/docker-compose && CHANGE_SOURCE=true docker compose up --build -d
 
 .PHONY: dkc-up-cc
 dkc-up-cc:
 	@echo "docker compose up (copy client)..."
-	cd deploy/docker-compose && export COPY_CLIENT=true && docker compose up --build -d
+	cd deploy/docker-compose && COPY_CLIENT=true docker compose up --build -d
