@@ -38,7 +38,7 @@ const tops = ref<Top[]>([]);
 onMounted(async () => {
   customApiOOP.topHubServiceFeed({site: currentChannel.value?.site})
     .then(({data}) => {
-      console.log(data);
+      tops.value = data.data?.list || [];
     })
     .catch((err) => {
       console.log(err);
