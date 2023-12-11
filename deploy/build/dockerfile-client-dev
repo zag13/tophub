@@ -1,0 +1,9 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=20.8.0
+
+FROM node:${NODE_VERSION}-alpine
+
+RUN npm config set registry http://registry.npmmirror.com
+
+WORKDIR /app

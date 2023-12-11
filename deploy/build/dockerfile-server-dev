@@ -10,23 +10,22 @@ RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
 WORKDIR /build
 
-COPY server/go.mod server/go.sum /build/
+COPY server/go.mod server/go.sum ./
 RUN go mod download
 
-COPY server/ /build/
+COPY server/ ./
 RUN go build -gcflags="all=-N -l" -o tophub-server *.go
 
 
 FROM alpine:3.18 AS run-stage
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/' /etc/apk/repositories
 RUN apk --no-cache add tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    echo "Asia/Shanghai" > /etc/timezone \
+    echo "Asia/Shanghai" > /etc/timezone
 
-WORKDIR /app
-
-COPY .env.docker /app/www/.env
+COPY .env-dev /app/www/.env
 COPY --from=build-stage /go/bin/dlv /
 COPY --from=build-stage /build/tophub-server /app/www/
 
-ENTRYPOINT ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app/www/tophub-server", "--", "-e", "/app/www/.env"]
+ENTRYPOINT ["/dlv", "--listen=:48080", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "--continue", "/app/www/tophub-server", "--", "-e", "/app/www/.env"]

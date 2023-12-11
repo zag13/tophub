@@ -24,4 +24,5 @@
 
 - [x] 使用 protobuf 作为 api 定义
   > 为什么要使用 protobuf，快速生成 openapi 文档，后续也可以有更多操作
-- [ ] 写一个 protoc-gen-gin 的工具，用于生成 gin 的路由代码
+- [ ] ~~写一个 protoc-gen-gin 的工具，用于生成 gin 的路由代码~~
+- [ ] 加入 redis，用于缓存

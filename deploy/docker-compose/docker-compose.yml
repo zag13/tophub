@@ -50,22 +50,6 @@ services:
     hostname: tophub_server
     networks:
       - mynet
-  server.debug:
-    depends_on:
-      - mysql
-    build:
-      context: ../../
-      dockerfile: deploy/build/dockerfile-server.debug
-    container_name: tophub_server.debug
-    hostname: tophub_server.debug
-    ports:
-      - "40000:40000"
-    security_opt:
-      - seccomp:unconfined
-    cap_add:
-      - SYS_PTRACE
-    networks:
-      - mynet
 
   ### MySQL ##############################################
   mysql:

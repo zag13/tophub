@@ -33,8 +33,9 @@ Thumbs.db
 *.swp
 
 # ------------------------------------------------------------
+archive/
 .env
-storage/
+*.zip
 **/openapi/.openapi-generator
 **/openapi/.npmignore
 **/openapi/.openapi-generator-ignore
